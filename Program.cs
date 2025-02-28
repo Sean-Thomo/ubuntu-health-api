@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Backend.Repositories;
+using Backend.Services;
 using Backend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,9 +21,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline. 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

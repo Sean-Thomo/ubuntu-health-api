@@ -8,7 +8,7 @@ namespace Backend.Controllers
     [Route("[controller]")]
     public class SignupController : ControllerBase
     {
-        [HttpPost("submit-form")]
+        [HttpPost("user-signup")]
         public IActionResult SubmitForm([FromForm] UserFormData user)
         {
             Console.WriteLine($"Received user: {user.Name}, {user.Email}, {user.Password}");
