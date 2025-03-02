@@ -42,5 +42,6 @@ namespace Backend.Repositories
         {
             _context.Patients.Update(patient);
             await _context.SaveChangesAsync();
+        }
     }
 }
