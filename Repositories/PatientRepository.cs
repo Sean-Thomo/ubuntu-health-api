@@ -30,5 +30,17 @@ namespace Backend.Repositories
             await _context.Patients.AddAsync(patient);
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeletePatientAsync(int id)
+        {
+            var patient = await _context.Patients.FindAsync(id);
+            _context.Patients.Remove(patient);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdatePatientAsync(Patient patient)
+        {
+            _context.Patients.Update(patient);
+            await _context.SaveChangesAsync();
     }
 }

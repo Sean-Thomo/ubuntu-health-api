@@ -47,6 +47,17 @@ namespace Backend.Controllers
             await _patientService.AddPatientAsync(patient);
             return CreatedAtAction(nameof(GetPatientById), new { id = patient.Id }, patient);
         }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeletePatient(int id)
+        {
+            var patient = await _patientService.GetPatientByIdAsync(id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            await _patientService.DeletePatientAsync(patient);
+            return NoContent();
     }
     }
 }

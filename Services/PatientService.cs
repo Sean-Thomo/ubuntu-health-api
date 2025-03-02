@@ -26,8 +26,17 @@ namespace Backend.Services
 
         public async Task AddPatientAsync(Patient patient)
         {
-            // Add any business logic here (e.g., validation)
             await _patientRepository.AddPatientAsync(patient);
+        }
+
+        public async Task DeletePatientAsync(int id)
+        {
+            await _patientRepository.DeletePatientAsync(id);
+        }
+
+        public async Task UpdatePatientAsync(Patient patient)
+        {
+            await _patientRepository.UpdatePatientAsync(patient);
         }
     }
 }
