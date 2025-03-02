@@ -5,13 +5,13 @@ using System;
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class SignupController : ControllerBase
     {
-        [HttpPost("user-signup")]
-        public IActionResult SubmitForm([FromForm] UserFormData user)
+        [HttpPost("practitioner-signup")]
+        public IActionResult SubmitForm([FromForm] Practitioner practitioner)
         {
-            Console.WriteLine($"Received user: {user.Name}, {user.Email}, {user.Password}");
+            Console.WriteLine($"Received user: {practitioner.FirstName}, {practitioner.LastName}, {practitioner.Email}");
             return Ok();
         }
     }
