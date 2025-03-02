@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Backend.Models;
+using Backend.Services;
 using System;
 
 namespace Backend.Controllers
@@ -48,7 +49,7 @@ namespace Backend.Controllers
             return CreatedAtAction(nameof(GetPatientById), new { id = patient.Id }, patient);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePatient(int id)
         {
             var patient = await _patientService.GetPatientByIdAsync(id);
@@ -56,7 +57,7 @@ namespace Backend.Controllers
             {
                 return NotFound();
             }
-            await _patientService.DeletePatientAsync(patient);
+            await _patientService.DeletePatientAsync(id);
             return NoContent();
     }
     }
