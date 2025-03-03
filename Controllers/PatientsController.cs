@@ -59,6 +59,22 @@ namespace Backend.Controllers
             }
             await _patientService.DeletePatientAsync(id);
             return NoContent();
-    }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdatePatient(int id, [FromBody] Patient patient)
+        {
+            if (id != patient.Id)
+            {
+                return BadRequest();
+            }
+            var existingPatient = await _patientService.GetPatientByIdAsync(id);
+            if (existingPatient == null)
+            {
+                return NotFound();
+            }
+            await _patientService.UpdatePatientAsync(patient);
+            return NoContent();
+        }
     }
 }
