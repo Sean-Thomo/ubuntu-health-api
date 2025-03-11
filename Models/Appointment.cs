@@ -3,8 +3,9 @@ namespace Backend.Models
     public class Appointment
     {
         public int Id { get; set; }
-        public int PatientId { get; set; }
-        public int PractitionerId { get; set; }
+        public int PatientFirstName { get; set; }
+        public int PatientLastName { get; set; }
+        // public int PractitionerId { get; set; }
         public string AppointmentDate { get; set; }
         public string AppointmentTime { get; set; }
         public string AppointmentType  { get; set; }
