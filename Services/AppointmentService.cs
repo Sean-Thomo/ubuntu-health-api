@@ -9,17 +9,17 @@ namespace Backend.Services
     {
         private readonly IAppointmentRepository _appointmentRepository;
 
-        public AppointmentService(IPatientRepository patientRepository)
+        public AppointmentService(IAppointmentRepository appointmentRepository)
         {
-            _appointmentRepository = patientRepository;
+            _appointmentRepository = appointmentRepository;
         }
 
-        public async Task<IEnumerable<AppointmentService>> GetAllAppointmentAsync()
+        public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
         {
-            return await _appointmentRepository.GetAllAppointmentAsync();
+            return await _appointmentRepository.GetAllAppointmentsAsync();
         }
 
-        public async Task<AppointmentService> GetPatientByIdAsync(int id)
+        public async Task<Appointment> GetAppointmentByIdAsync(int id)
         {
             return await _appointmentRepository.GetAppointmentByIdAsync(id);
         }
@@ -34,7 +34,7 @@ namespace Backend.Services
             await _appointmentRepository.DeleteAppointmentAsync(id);
         }
 
-        public async Task UpdatePatientAsync(AppointmentService appointment)
+        public async Task UpdateAppointmentAsync(Appointment appointment)
         {
             await _appointmentRepository.UpdateAppointmentAsync(appointment);
         }

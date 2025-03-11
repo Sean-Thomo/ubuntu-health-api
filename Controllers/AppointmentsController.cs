@@ -42,8 +42,11 @@ namespace Backend.Controllers
                 return BadRequest("Appointment data is null");
             }
             {
-                Console.WriteLine($"Received appointment: {appointment.FirstName}, {appointment.AppointmentDate}, Type: {appointment.AppointmentType}");
+                Console.WriteLine($"Received appointment: {appointment.PatientFirstName}, {appointment.AppointmentDate}, Type: {appointment.AppointmentType}");
             }
+
+            await _appointmentService.AddAppointmentAsync(appointment);
+            return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.Id}, appointment);
         }
 
         [HttpDelete("{id}")]
@@ -55,10 +58,11 @@ namespace Backend.Controllers
                 return NotFound();
             }
             await _appointmentService.DeleteAppointmentAsync(id);
+            return NoContent();
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateAppointment(int id, [FromBody] AppointmentsController appointments)
+        public async Task<ActionResult> UpdateAppointment(int id, [FromBody] Appointment appointment)
         {
             if (id != appointment.Id)
             {

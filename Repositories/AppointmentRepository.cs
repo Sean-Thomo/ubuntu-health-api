@@ -15,7 +15,7 @@ namespace Backend.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<AppointmentRepository>> GetAllAppointmentsAsync()
+        public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
         {
             return await _context.Appointments.ToListAsync();
         }
@@ -40,7 +40,7 @@ namespace Backend.Repositories
 
         public async Task UpdateAppointmentAsync(Appointment appointment)
         {
-            _context.Appointment.Update(patient);
+            _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
         }
     }
