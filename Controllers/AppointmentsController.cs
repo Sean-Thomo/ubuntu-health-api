@@ -42,7 +42,7 @@ namespace Backend.Controllers
                 return BadRequest("Appointment data is null");
             }
             {
-                Console.WriteLine($"Received appointment: {appointment.PatientFirstName}, {appointment.AppointmentDate}, Type: {appointment.AppointmentType}");
+                Console.WriteLine($"Received appointment: {appointment}");
             }
 
             await _appointmentService.AddAppointmentAsync(appointment);
