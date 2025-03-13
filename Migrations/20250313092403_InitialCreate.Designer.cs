@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MediSyncApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250311150427_UpdateDatabaseSchema")]
-    partial class UpdateDatabaseSchema
+    [Migration("20250313092403_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,11 +45,13 @@ namespace MediSyncApi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PatientFirstName")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PatientFirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("PatientLastName")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PatientLastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Status")
                         .IsRequired()

@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Backend.Models;
 using Backend.Services;
-using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-
-    public class AppointmentsController : ControllerBase {
+    public class AppointmentsController : ControllerBase
+    {
         private readonly IAppointmentService _appointmentService;
 
         public AppointmentsController(IAppointmentService appointmentService)
@@ -41,12 +42,9 @@ namespace Backend.Controllers
             {
                 return BadRequest("Appointment data is null");
             }
-            {
-                Console.WriteLine($"Received appointment: {appointment}");
-            }
 
             await _appointmentService.AddAppointmentAsync(appointment);
-            return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.Id}, appointment);
+            return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.Id }, appointment);
         }
 
         [HttpDelete("{id}")]

@@ -42,11 +42,13 @@ namespace MediSyncApi.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PatientFirstName")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PatientFirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("PatientLastName")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PatientLastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Status")
                         .IsRequired()

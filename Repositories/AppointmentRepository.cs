@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Backend.Data;
 using Backend.Models;
+using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
@@ -34,8 +34,11 @@ namespace Backend.Repositories
         public async Task DeleteAppointmentAsync(int id)
         {
             var appointment = await _context.Appointments.FindAsync(id);
-            _context.Appointments.Remove(appointment);
-            await _context.SaveChangesAsync();
+            if (appointment != null)
+            {
+                _context.Appointments.Remove(appointment);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateAppointmentAsync(Appointment appointment)

@@ -28,15 +28,14 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAllOrigins");
-
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
