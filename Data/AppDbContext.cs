@@ -10,6 +10,7 @@ namespace Backend.Data
         public DbSet<Practitioner> Practitioners { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<Staff> Staff { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
