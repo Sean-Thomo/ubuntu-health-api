@@ -23,5 +23,16 @@ namespace Backend.Controllers
             var prescription = await _prescriptionService.GetAllPrescriptionsAsync();
             return Ok(prescriptions)
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Prescription>> GetPrescriptionById(int id)
+        {
+            var prescription = await _prescriptionService.GetPrescriptionByIdAsync(id);
+            if (prescription == null)
+            {
+                return NotFound();
+            }
+            return Ok(prescription);
+        }
     }
 }
