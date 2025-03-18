@@ -5,7 +5,7 @@ namespace Backend.Models
         public int Id { get; set; }
         public int PatientId { get; set; }
         public int TenantId { get; set; }
-        public Patient Patient { get; set; }
+        public Patient? Patient { get; set; }
         public int PractitionerId { get; set; }
         public string MedicationName { get; set; }
         public string Dosage { get; set; }

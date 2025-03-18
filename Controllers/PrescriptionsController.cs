@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Backend.Models;
 using Backend.Services;
-using Microsoft.AspNetCore.Identity;
 
 namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PrescriptionController(IPrescriptionService prescriptionService) : ControllerBase
+    public class PrescriptionsController(IPrescriptionService prescriptionService) : ControllerBase
     {
         private readonly IPrescriptionService _prescriptionService = prescriptionService;
 
