@@ -43,7 +43,7 @@ namespace Backend.Repositories
         public async Task UpdatePrescriptionAsync(Prescription prescription)
         {
             _context.Prescription.Update(prescription);
-            await _context.SaveChangesAsync()
+            await _context.SaveChangesAsync();
         }
     }
 }
