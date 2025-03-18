@@ -1,19 +1,12 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Backend.Models;
 using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
 {
-    public class AppointmentRepository : IAppointmentRepository
+    public class AppointmentRepository(AppDbContext context) : IAppointmentRepository
     {
-        private readonly AppDbContext _context;
-
-        public AppointmentRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
         {
