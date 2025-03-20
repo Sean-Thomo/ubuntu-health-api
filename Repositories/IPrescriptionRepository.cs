@@ -1,6 +1,6 @@
-using Backend.Models;
+using ubuntu_health_api.Models;
 
-namespace Backend.Repositories
+namespace ubuntu_health_api.Repositories
 {
     public interface IPrescriptionRepository
     {

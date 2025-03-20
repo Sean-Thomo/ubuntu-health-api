@@ -1,7 +1,7 @@
-using Backend.Models;
-using Backend.Repositories;
+using ubuntu_health_api.Models;
+using ubuntu_health_api.Repositories;
 
-namespace Backend.Services
+namespace ubuntu_health_api.Services
 {
     public class PrescriptionService(IPrescriptionRepository prescriptionRepository) : IPrescriptionService
     {

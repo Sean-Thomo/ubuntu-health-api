@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Backend.Models;
 using Backend.Services;
 
-namespace Backend.Controllers
+namespace ubuntu_health_api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
