@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace MediSyncApi.Migrations
+namespace ubuntu_health_api.Migrations
 {
     /// <inheritdoc />
     public partial class AddTenantIdToDataTables : Migration

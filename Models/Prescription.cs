@@ -1,4 +1,4 @@
-namespace Backend.Models
+namespace ubuntu_health_api.Models
 {
     public class Prescription 
     {

@@ -1,8 +1,8 @@
-using Backend.Models;
-using Backend.Data;
+using ubuntu_health_api.Models;
+using ubuntu_health_api.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Repositories
+namespace ubuntu_health_api.Repositories
 {
     public class PrescriptionRepository : IPrescriptionRepository
     {

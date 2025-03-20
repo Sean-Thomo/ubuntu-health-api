@@ -1,0 +1,54 @@
+# Ignore build artifacts
+bin/
+obj/
+
+# Ignore local database files
+App.db
+App.db-shm
+App.db-wal
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userprefs
+
+# Ignore local development settings
+appsettings.Development.json
+
+# Ignore NuGet packages directory
+packages/
+
+# Ignore Visual Studio solution user options
+*.sln.iml
+
+# Ignore ReSharper files
+_ReSharper.*
+*.ReSharper
+
+# Ignore Rider files
+.idea/
+
+# Ignore VS Code files
+.vscode/
+
+# Ignore temp files
+*.tmp
+*.temp
+
+# Ignore logs and diagnostics
+*.log
+*.nlog
+*.etl
+*.dump
+
+# Ignore compiled files
+*.dll
+*.pdb
+*.exe
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore test results
+TestResults/
+*.trx

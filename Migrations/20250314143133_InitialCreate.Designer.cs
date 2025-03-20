@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MediSyncApi.Migrations
+namespace ubuntu_health_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20250314143133_InitialCreate")]

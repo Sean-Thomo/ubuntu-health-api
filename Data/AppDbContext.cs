@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
 
-namespace Backend.Data
+namespace ubuntu_health_api.Data
 {
     public class AppDbContext : DbContext
     {
