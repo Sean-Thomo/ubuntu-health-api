@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Backend.Repositories;
-using Backend.Services;
-using Backend.Data;
+using ubuntu_health_api.Repositories;
+using ubuntu_health_api.Services;
+using ubuntu_health_api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

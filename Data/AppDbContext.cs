@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Backend.Models;
+using ubuntu_health_api.Models;
 
 namespace ubuntu_health_api.Data
 {
