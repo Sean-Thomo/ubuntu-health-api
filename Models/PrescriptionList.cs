@@ -1,17 +1,13 @@
 namespace ubuntu_health_api.Models
 {
-        public class PrescriptionMedication
-    {
-        public int Id { get; set; }
-        
-        public int PrescriptionId { get; set; }
-        
-        public Prescription? Prescription { get; set; }
-        
-        public string Name { get; set; }
-        
-        public string Dosage { get; set; }
-        
-        public string? Instructions { get; set; }
-    }
+    public class PrescriptionMedication
+{
+    public int Id { get; set; }
+    public int PrescriptionListId { get; set; }
+    public int PrescriptionId { get; set; }
+    public Prescription? Prescription { get; set; }
+    public required string Name { get; set; }
+    public required string Dosage { get; set; }
+    public string? Instructions { get; set; }
+}
 }

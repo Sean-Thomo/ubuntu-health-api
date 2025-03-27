@@ -37,7 +37,7 @@ namespace ubuntu_health_api.Controllers
             }
 
             await _prescriptionService.AddPrescriptionAsync(prescription);
-            return CreatedAtAction(nameof(GetPrescriptionById), new { id = prescription.Id }, prescription);
+            return CreatedAtAction(nameof(GetPrescriptionById), new { id = prescription.PrescriptionId }, prescription);
         }
 
         [HttpDelete("{id}")]
@@ -56,7 +56,7 @@ namespace ubuntu_health_api.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdatePrescription(int id, [FromBody] Prescription prescription)
         {
-            if (id != prescription.Id)
+            if (id != prescription.PrescriptionId)
             {
                 return BadRequest();
             }

@@ -37,7 +37,7 @@ namespace ubuntu_health_api.Controllers
             }
 
             await _appointmentService.AddAppointmentAsync(appointment);
-            return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.Id }, appointment);
+            return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.AppointmentId }, appointment);
         }
 
         [HttpDelete("{id}")]
@@ -55,7 +55,7 @@ namespace ubuntu_health_api.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAppointment(int id, [FromBody] Appointment appointment)
         {
-            if (id != appointment.Id)
+            if (id != appointment.AppointmentId)
             {
                 return BadRequest();
             }

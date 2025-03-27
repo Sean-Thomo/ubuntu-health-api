@@ -2,7 +2,7 @@ namespace ubuntu_health_api.Models
 {
     public class Appointment
     {
-        public int Id { get; set; }
+        public int AppointmentId { get; set; }
         public int TenantId { get; set; }
         public string PatientFirstName { get; set; }
         public string PatientLastName { get; set; }

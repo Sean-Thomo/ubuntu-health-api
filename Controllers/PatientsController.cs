@@ -46,7 +46,7 @@ namespace ubuntu_health_api.Controllers
             }
 
             await _patientService.AddPatientAsync(patient);
-            return CreatedAtAction(nameof(GetPatientById), new { id = patient.Id }, patient);
+            return CreatedAtAction(nameof(GetPatientById), new { id = patient.PatientId }, patient);
         }
 
         [HttpDelete("{id}")]
@@ -64,7 +64,7 @@ namespace ubuntu_health_api.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdatePatient(int id, [FromBody] Patient patient)
         {
-            if (id != patient.Id)
+            if (id != patient.PatientId)
             {
                 return BadRequest();
             }
