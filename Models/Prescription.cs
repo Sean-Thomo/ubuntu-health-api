@@ -13,7 +13,7 @@ namespace ubuntu_health_api.Models
         public int Refills { get; set; } = 0;
         public string? Instructions { get; set; }
         public int TenantId { get; set; }
-        public List<PrescriptionMedication> Medications { get; set; } = new List<PrescriptionMedication>();
+        public List<PrescriptionMedication> Medications { get; set; } = [];
         public string CreatedAt { get; set; }
         public string UpdatedAt { get; set; }
     }
