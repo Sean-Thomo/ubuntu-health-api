@@ -6,7 +6,7 @@ namespace ubuntu_health_api.Models
         public int PatientId { get; set; }
         public Patient? Patient { get; set; }
         public int PractitionerId { get; set; }
-        public string Status { get; set; };
+        public string Status { get; set; }
         public DateTime IssueDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string Frequency { get; set; }
