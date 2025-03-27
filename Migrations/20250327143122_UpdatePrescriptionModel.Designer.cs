@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ubuntu_health_api.Data;
 
@@ -10,16 +11,18 @@ using ubuntu_health_api.Data;
 namespace ubuntu_health_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250327143122_UpdatePrescriptionModel")]
+    partial class UpdatePrescriptionModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
 
             modelBuilder.Entity("ubuntu_health_api.Models.Appointment", b =>
                 {
-                    b.Property<int>("AppointmentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -62,14 +65,14 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("AppointmentId");
+                    b.HasKey("Id");
 
                     b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("ubuntu_health_api.Models.Invoice", b =>
                 {
-                    b.Property<int>("InvoiceId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -102,7 +105,7 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("InvoiceId");
+                    b.HasKey("Id");
 
                     b.HasIndex("PatientId");
 
@@ -111,7 +114,7 @@ namespace ubuntu_health_api.Migrations
 
             modelBuilder.Entity("ubuntu_health_api.Models.Patient", b =>
                 {
-                    b.Property<int>("PatientId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -202,7 +205,7 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PatientId");
+                    b.HasKey("Id");
 
                     b.ToTable("Patients");
                 });
@@ -255,7 +258,7 @@ namespace ubuntu_health_api.Migrations
 
             modelBuilder.Entity("ubuntu_health_api.Models.Prescription", b =>
                 {
-                    b.Property<int>("PrescriptionId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -267,6 +270,7 @@ namespace ubuntu_health_api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Frequency")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Instructions")
@@ -285,6 +289,7 @@ namespace ubuntu_health_api.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TenantId")
@@ -294,7 +299,7 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PrescriptionId");
+                    b.HasKey("Id");
 
                     b.HasIndex("PatientId");
 
@@ -319,9 +324,6 @@ namespace ubuntu_health_api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PrescriptionId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PrescriptionListId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
