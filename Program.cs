@@ -1,10 +1,15 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ubuntu_health_api.Repositories;
 using ubuntu_health_api.Services;
 using ubuntu_health_api.Data;
+using ubuntu_health_api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
 {
