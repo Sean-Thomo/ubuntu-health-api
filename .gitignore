@@ -54,3 +54,4 @@ TestResults/
 *.trx
 
 .env
+.env
