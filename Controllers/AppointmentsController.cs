@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ubuntu_health_api.Models;
 using ubuntu_health_api.Services;
 
 namespace ubuntu_health_api.Controllers
 {
+    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AppointmentsController(IAppointmentService appointmentService) : ControllerBase

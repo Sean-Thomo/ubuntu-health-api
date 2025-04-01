@@ -1,32 +1,30 @@
 using Microsoft.AspNetCore.Mvc;
 using ubuntu_health_api.Models;
 using ubuntu_health_api.Services;
-using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ubuntu_health_api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class PatientsController  : ControllerBase
+    public class PatientsController(IPatientService patientService, IHttpContextAccessor httpContextAccessor) : ControllerBase
     {
-        private readonly IPatientService _patientService;
-
-        public PatientsController(IPatientService patientService)
-        {
-            _patientService = patientService;
-        }
+        private readonly IPatientService _patientService = patientService;
+        private readonly string _tenantId = httpContextAccessor.HttpContext?.User?
+        .FindFirst("TenantId")?.Value ?? throw new UnauthorizedAccessException();
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetAllPatients()
         {
-            var patients = await _patientService.GetAllPatientsAsync();
+            var patients = await _patientService.GetAllPatientsAsync(_tenantId);
             return Ok(patients);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Patient>> GetPatientById(int id)
         {
-            var patient = await _patientService.GetPatientByIdAsync(id);
+            var patient = await _patientService.GetPatientByIdAsync(id, _tenantId);
             if (patient == null)
             {
                 return NotFound();
@@ -45,19 +43,20 @@ namespace ubuntu_health_api.Controllers
                 Console.WriteLine($"Received patient: {patient.FirstName}, {patient.LastName}, Email: {patient.Email}");
             }
 
-            await _patientService.AddPatientAsync(patient);
+            await _patientService.AddPatientAsync(patient, _tenantId);
             return CreatedAtAction(nameof(GetPatientById), new { id = patient.PatientId }, patient);
         }
 
+        [Authorize(Roles = "Doctor,Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePatient(int id)
         {
-            var patient = await _patientService.GetPatientByIdAsync(id);
+            var patient = await _patientService.GetPatientByIdAsync(id, _tenantId);
             if (patient == null)
             {
                 return NotFound();
             }
-            await _patientService.DeletePatientAsync(id);
+            await _patientService.DeletePatientAsync(id, _tenantId);
             return NoContent();
         }
 
@@ -68,12 +67,12 @@ namespace ubuntu_health_api.Controllers
             {
                 return BadRequest();
             }
-            var existingPatient = await _patientService.GetPatientByIdAsync(id);
+            var existingPatient = await _patientService.GetPatientByIdAsync(id, _tenantId);
             if (existingPatient == null)
             {
                 return NotFound();
             }
-            await _patientService.UpdatePatientAsync(patient);
+            await _patientService.UpdatePatientAsync(patient, _tenantId);
             return NoContent();
         }
     }
