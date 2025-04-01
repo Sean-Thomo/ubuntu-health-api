@@ -7,7 +7,8 @@ public class AuthResponseDto
     public string? RefreshToken { get; set; }
     public string? Message { get; set; }
     public string? Email { get; set; }
+    public string? LicenseNumber { get; set; }
     public IEnumerable<string>? Roles { get; set; }
-    public IEnumerable<string>? Errors { get; set; } // Add this
+    public IEnumerable<string>? Errors { get; set; }
 }
 }
