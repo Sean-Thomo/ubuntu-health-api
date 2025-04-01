@@ -1,4 +1,3 @@
-// Models/DTO/RegisterDto.cs
 namespace ubuntu_health_api.Models.DTO
 {
     public class RegisterDto

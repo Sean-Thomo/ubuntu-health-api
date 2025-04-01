@@ -19,7 +19,7 @@ namespace ubuntu_health_api.Controllers
         private readonly IConfiguration _configuration = configuration;
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto model)
+        public async Task<IActionResult> Register([FromBody] RegisterDto request)
         {
             if (!ModelState.IsValid)
             {
@@ -27,12 +27,9 @@ namespace ubuntu_health_api.Controllers
                 { 
                     IsSuccess = false,
                     Message = "Invalid request",
-                    // Errors = ModelState.Values
-                    //     .SelectMany(v => v.Errors)
-                    //     .Select(e => e.ErrorMessage)
                 });
             }
-            var userExists = await _userManager.FindByEmailAsync(model.Email);
+            var userExists = await _userManager.FindByEmailAsync(request.Email);
             if (userExists != null)
                 return BadRequest(new AuthResponseDto 
                 { 
@@ -42,29 +39,24 @@ namespace ubuntu_health_api.Controllers
 
             var user = new ApplicationUser
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                UserName = model.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                UserName = request.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                LicenseNumber = model.LicenseNumber,
-                Specialty = model.Specialty,
-                PracticeName = model.PracticeName,
-                PracticePhone = model.PracticePhone,
-                // CreatedAt = model.CreatedAt,
-                // UpdatedAt = model.UpdatedAt
+                LicenseNumber = request.LicenseNumber,
+                Specialty = request.Specialty,
+                PracticeName = request.PracticeName,
+                PracticePhone = request.PracticePhone,
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
                 return BadRequest(new AuthResponseDto 
                 { 
                     IsSuccess = false, 
                     Message = string.Join(", ", result.Errors.Select(e => e.Description)) 
                 });
-
-            // Optionally add default role
-            // await _userManager.AddToRoleAsync(user, "User");
 
             return Ok(new AuthResponseDto 
             { 
@@ -74,11 +66,11 @@ namespace ubuntu_health_api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto model)
+        public async Task<IActionResult> Login([FromBody] LoginDto request)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
-                return Unauthorized(new AuthResponseDto 
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
+                return Unauthorized(new AuthResponseDto
                 { 
                     IsSuccess = false, 
                     Message = "Invalid email or password" 
@@ -89,9 +81,9 @@ namespace ubuntu_health_api.Controllers
                 new(ClaimTypes.Name, user.UserName),
                 new(ClaimTypes.Email, user.Email),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new("LicenseNumber", user.LicenseNumber),
             };
 
-            // Add roles to claims
             var userRoles = await _userManager.GetRolesAsync(user);
             foreach (var role in userRoles)
             {
@@ -105,6 +97,7 @@ namespace ubuntu_health_api.Controllers
                 IsSuccess = true,
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Email = user.Email,
+                LicenseNumber = user.LicenseNumber,
                 Roles = userRoles,
                 Message = "Login successful"
             });
@@ -118,7 +111,7 @@ namespace ubuntu_health_api.Controllers
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddHours(4),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(
                     authSigningKey, SecurityAlgorithms.HmacSha256));
