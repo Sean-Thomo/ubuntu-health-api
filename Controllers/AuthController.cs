@@ -34,11 +34,12 @@ namespace ubuntu_health_api.Controllers
                 return BadRequest(new AuthResponseDto 
                 { 
                     IsSuccess = false, 
-                    Message = "User already exists!" 
+                    Message = "User already exists!",
                 });
 
             var user = new ApplicationUser
             {
+                TenantId = request.TenantId,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
@@ -61,7 +62,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(new AuthResponseDto 
             { 
                 IsSuccess = true, 
-                Message = "User created successfully!" 
+                Message = "User created successfully!"
             });
         }
 
@@ -70,24 +71,38 @@ namespace ubuntu_health_api.Controllers
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
-                return Unauthorized(new AuthResponseDto
-                { 
-                    IsSuccess = false, 
-                    Message = "Invalid email or password" 
-                });
+            return Unauthorized(new AuthResponseDto
+            { 
+                IsSuccess = false, 
+                Message = "Invalid email or password" 
+            });
 
             var authClaims = new List<Claim>
             {
-                new(ClaimTypes.Name, user.UserName),
                 new(ClaimTypes.Email, user.Email),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new("LicenseNumber", user.LicenseNumber),
             };
+
+            var tenantId = user.TenantId;
+            if (!string.IsNullOrEmpty(tenantId))
+            {
+                authClaims.Add(new Claim("TenantId", tenantId));
+            }
+
+            if (!string.IsNullOrEmpty(user.LicenseNumber))
+            {
+                authClaims.Add(new Claim("LicenseNumber", user.LicenseNumber));
+            }
 
             var userRoles = await _userManager.GetRolesAsync(user);
             foreach (var role in userRoles)
             {
                 authClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            if (string.IsNullOrEmpty(user.LicenseNumber))
+            {
+                Console.WriteLine("LicenseNumber is null for user: " + user.Email);
             }
 
             var token = GenerateJwtToken(authClaims);

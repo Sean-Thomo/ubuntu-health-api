@@ -2,6 +2,7 @@ namespace ubuntu_health_api.Models.DTO
 {
     public class RegisterDto
     {
+        public required string TenantId { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required string Email { get; set; }
