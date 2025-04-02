@@ -11,8 +11,8 @@ using ubuntu_health_api.Data;
 namespace ubuntu_health_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250402074853_UpdateTenantIdAllModels")]
-    partial class UpdateTenantIdAllModels
+    [Migration("20250402082703_RedoMigrations")]
+    partial class RedoMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -282,14 +282,12 @@ namespace ubuntu_health_api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
@@ -305,8 +303,6 @@ namespace ubuntu_health_api.Migrations
 
                     b.HasKey("InvoiceId");
 
-                    b.HasIndex("PatientId");
-
                     b.ToTable("Invoices");
                 });
 
@@ -317,11 +313,9 @@ namespace ubuntu_health_api.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Allergies")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedAt")
@@ -329,31 +323,24 @@ namespace ubuntu_health_api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CurrentMedication")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EmergencyContactFirstName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EmergencyContactLastName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EmergencyContactPhone")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EmergencyContactRelationship")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Gender")
@@ -361,39 +348,30 @@ namespace ubuntu_health_api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IdNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MedicalAidName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MembershipNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PostalCode")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Province")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("StreetTwo")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
@@ -415,8 +393,10 @@ namespace ubuntu_health_api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("CreatedAt")
-                        .IsRequired()
+                    b.Property<bool>("CanPrescribe")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DEANumber")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -427,19 +407,33 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("HireDate")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LicenceNumber")
+                    b.Property<string>("LicenseExpiration")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LicenseNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NPI")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Specialization")
+                    b.Property<string>("Specialty")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -447,7 +441,7 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UpdatedAt")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -544,7 +538,7 @@ namespace ubuntu_health_api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<string>("Department")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -554,6 +548,13 @@ namespace ubuntu_health_api.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("HireDate")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -567,11 +568,15 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SupervisorId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("TenantId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -705,17 +710,6 @@ namespace ubuntu_health_api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ubuntu_health_api.Models.Invoice", b =>
-                {
-                    b.HasOne("ubuntu_health_api.Models.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("ubuntu_health_api.Models.PrescriptionMedication", b =>
