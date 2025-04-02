@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ubuntu_health_api.Data;
 
@@ -10,9 +11,11 @@ using ubuntu_health_api.Data;
 namespace ubuntu_health_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250402074023_UpdateTenantId")]
+    partial class UpdateTenantId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
@@ -289,9 +292,8 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TenantId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("TEXT");
@@ -440,9 +442,8 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TenantId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UpdatedAt")
                         .IsRequired()
@@ -492,9 +493,8 @@ namespace ubuntu_health_api.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TenantId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UpdatedAt")
                         .IsRequired()
@@ -564,9 +564,8 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TenantId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");

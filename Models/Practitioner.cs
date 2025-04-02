@@ -3,7 +3,7 @@ namespace ubuntu_health_api.Models
     public class Practitioner
     {
         public int Id { get; set; }
-        public int TenantId { get; set; }
+        public required string TenantId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
