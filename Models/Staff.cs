@@ -1,15 +1,9 @@
 namespace ubuntu_health_api.Models
 {
-    public class Staff
+    public class Staff : Person
     {
-        public int Id { get; set; }
-        public required string TenantId { get; set; }
-        public required string FirstName { get; set; }
-        public required string LastName { get; set; }
-        public required string Email { get; set; }
-        public required string Phone { get; set; }
-        public required string Role { get; set; } // Admin, Receptionist, Nurse,
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public string? Department { get; set; }
+        public required string Role { get; set; }
+        public string? SupervisorId { get; set; }
     }
 }

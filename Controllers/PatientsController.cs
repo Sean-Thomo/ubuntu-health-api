@@ -18,7 +18,7 @@ namespace ubuntu_health_api.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        private string GetTenantId()
+        private string? GetTenantId()
         {
             var tenantId = _httpContextAccessor.HttpContext?.User?.FindFirst("TenantId")?.Value;
             if(string.IsNullOrEmpty(tenantId))

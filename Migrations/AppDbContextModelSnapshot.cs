@@ -487,6 +487,15 @@ namespace ubuntu_health_api.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Refills")
+<<<<<<< HEAD
+=======
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+>>>>>>> d32f5ce0c208a28fd03e6bed9803d2132d1c087b
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Status")
