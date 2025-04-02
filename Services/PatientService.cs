@@ -14,12 +14,12 @@ namespace ubuntu_health_api.Services
 
         public async Task<IEnumerable<Patient>> GetAllPatientsAsync(string tenantId)
         {
-            return await _patientRepository.GetAllPatientsAsync();
+            return await _patientRepository.GetAllPatientsAsync(tenantId);
         }
 
         public async Task<Patient> GetPatientByIdAsync(int id, string tenantId)
         {
-            return await _patientRepository.GetPatientByIdAsync(id);
+            return await _patientRepository.GetPatientByIdAsync(id, tenantId);
         }
 
         public async Task AddPatientAsync(Patient patient, string tenantId)

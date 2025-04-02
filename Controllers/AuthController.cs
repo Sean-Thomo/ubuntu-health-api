@@ -114,7 +114,7 @@ namespace ubuntu_health_api.Controllers
                 expires: DateTime.Now.AddHours(4),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(
-                    authSigningKey, SecurityAlgorithms.HmacSha256));
+                    authSigningKey, SecurityAlgorithms.HmacSha256)); 
 
             return token;
         }
