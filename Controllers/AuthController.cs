@@ -24,9 +24,9 @@ namespace ubuntu_health_api.Controllers
 
         [HttpPost("create-role")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateRole([FromBody] string roleName)
+        public async Task<IActionResult> CreateRole([FromBody] string Roles)
         {
-            if(string.IsNullOrWhiteSpace(roleName))
+            if(string.IsNullOrWhiteSpace(Roles))
             {
                 return BadRequest(new AuthResponseDto
                 {
@@ -35,7 +35,7 @@ namespace ubuntu_health_api.Controllers
                 });
             }
 
-            var roleExists = await _roleManager.RoleExistsAsync(roleName);
+            var roleExists = await _roleManager.RoleExistsAsync(Roles);
             if(roleExists)
             {
                 return BadRequest(new AuthResponseDto
@@ -45,7 +45,7 @@ namespace ubuntu_health_api.Controllers
                 });
             }
 
-            var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
+            var result = await _roleManager.CreateAsync(new IdentityRole(Roles));
             if (!result.Succeeded)
             {
                 return BadRequest(new AuthResponseDto
@@ -172,6 +172,114 @@ namespace ubuntu_health_api.Controllers
                 Message = $"Role {request.Roles} assigned to user successfully"
             });
         }
+
+        [HttpPost("remove-role")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RemoveRoleFromUser([FromBody] AssignRoleDto request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return NotFound(new AuthResponseDto
+                {
+                    IsSuccess = false,
+                    Message = "User not found"
+                });
+            }
+
+            // Security check for tenant boundaries
+            var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            var currentUser = await _userManager.FindByEmailAsync(currentUserEmail);
+            
+            if (User.IsInRole("PracticeAdmin") && user.TenantId != currentUser.TenantId)
+            {
+                return Forbid();
+            }
+
+            // Prevent removing the last SystemAdmin role
+            if (request.Roles.Contains("Admin"))
+            {
+                var adminUsers = await _userManager.GetUsersInRoleAsync("SystemAdmin");
+                if (adminUsers.Count <= 1 && adminUsers.Contains(user))
+                {
+                    return BadRequest(new AuthResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = "Cannot remove the last system administrator"
+                    });
+                }
+            }
+
+            if (!request.Roles.All(role => _userManager.IsInRoleAsync(user, role).Result))
+            {
+                return BadRequest(new AuthResponseDto
+                {
+                    IsSuccess = false,
+                    Message = "User does not have this role"
+                });
+            }
+
+            foreach (var role in request.Roles)
+            {
+                var result = await _userManager.RemoveFromRoleAsync(user, role);
+                if (!result.Succeeded)
+                {
+                    return BadRequest(new AuthResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = string.Join(", ", result.Errors.Select(e => e.Description))
+                    });
+                }
+                
+                if (!result.Succeeded)
+                {
+                    return BadRequest(new AuthResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = string.Join(", ", result.Errors.Select(e => e.Description))
+                    });
+                }
+            }
+
+            return Ok(new AuthResponseDto
+            {
+                IsSuccess = true,
+                Message = $"Role {request.Roles} removed from user successfully"
+            });
+        }
+
+[HttpGet("user-roles")]
+[Authorize(Roles = "SystemAdmin,PracticeAdmin")]
+public async Task<IActionResult> GetUserRoles(string email)
+{
+    var user = await _userManager.FindByEmailAsync(email);
+    if (user == null)
+    {
+        return NotFound(new AuthResponseDto
+        {
+            IsSuccess = false,
+            Message = "User not found"
+        });
+    }
+
+    // Security check for tenant boundaries
+    var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+    var currentUser = await _userManager.FindByEmailAsync(currentUserEmail);
+    
+    if (User.IsInRole("PracticeAdmin") && user.TenantId != currentUser.TenantId)
+    {
+        return Forbid();
+    }
+
+    var roles = await _userManager.GetRolesAsync(user);
+
+    return Ok(new
+    {
+        IsSuccess = true,
+        Email = email,
+        Roles = roles
+    });
+}
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto request)
