@@ -5,7 +5,7 @@ using ubuntu_health_api.Services;
 
 namespace ubuntu_health_api.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AppointmentsController(IAppointmentService appointmentService) : ControllerBase

@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using ubuntu_health_api.Models;
 using ubuntu_health_api.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ubuntu_health_api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PrescriptionsController(IPrescriptionService prescriptionService) : ControllerBase

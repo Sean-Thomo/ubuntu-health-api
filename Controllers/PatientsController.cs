@@ -69,7 +69,6 @@ namespace ubuntu_health_api.Controllers
             return CreatedAtAction(nameof(GetPatientById), new { id = patient.PatientId }, patient);
         }
 
-        // [Authorize(Roles = "Doctor,Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePatient(int id)
         {
