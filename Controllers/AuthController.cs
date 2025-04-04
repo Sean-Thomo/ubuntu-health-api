@@ -54,7 +54,7 @@ namespace ubuntu_health_api.Controllers
                     Message = string.Join(", ", result.Errors.Select(e => e.Description))
                 });
             }
-            
+
             return Ok(new AuthResponseDto
             {
                 IsSuccess = true,
@@ -107,6 +107,69 @@ namespace ubuntu_health_api.Controllers
             { 
                 IsSuccess = true, 
                 Message = "User created successfully!"
+            });
+        }
+
+        [HttpPost("assign-role")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AssignRoleToUser([FromBody] AssignRoleDto request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return NotFound(new AuthResponseDto
+                {
+                    IsSuccess = false,
+                    Message = "User not found"
+                });
+            }
+
+            var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            var currentUser = await _userManager.FindByEmailAsync(currentUserEmail);
+
+            if(User.IsInRole("Admin") && user.TenantId != currentUser.TenantId)
+            {
+                return NotFound();
+            }
+
+            foreach (var role in request.Roles)
+            {
+                var roleExists = await _roleManager.RoleExistsAsync(role);
+                if (!roleExists)
+                {
+                    return BadRequest(new AuthResponseDto{
+                        IsSuccess = false,
+                        Message = $"Role '{role}' does not exist"
+                    });
+                }
+            }
+
+            if (request.Roles.Any(role => _userManager.IsInRoleAsync(user, role).Result))
+            {
+                return BadRequest(new AuthResponseDto{
+
+                    IsSuccess = false,
+                    Message = "User already has this role"
+                });
+            }
+
+            foreach (var role in request.Roles)
+            {
+                var result = await _userManager.AddToRoleAsync(user, role);
+                if (!result.Succeeded)
+                {
+                    return BadRequest(new AuthResponseDto
+                    {
+                        IsSuccess = false,
+                        Message = string.Join(", ", result.Errors.Select(e => e.Description))
+                    });
+                }
+            }
+
+            return Ok(new AuthResponseDto
+            {
+                IsSuccess = true,
+                Message = $"Role {request.Roles} assigned to user successfully"
             });
         }
 
