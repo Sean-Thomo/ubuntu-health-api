@@ -187,7 +187,6 @@ namespace ubuntu_health_api.Controllers
                 });
             }
 
-            // Security check for tenant boundaries
             var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
             var currentUser = await _userManager.FindByEmailAsync(currentUserEmail);
             
@@ -196,7 +195,6 @@ namespace ubuntu_health_api.Controllers
                 return Forbid();
             }
 
-            // Prevent removing the last SystemAdmin role
             if (request.Roles.Contains("Admin"))
             {
                 var adminUsers = await _userManager.GetUsersInRoleAsync("SystemAdmin");
@@ -230,7 +228,7 @@ namespace ubuntu_health_api.Controllers
                         Message = string.Join(", ", result.Errors.Select(e => e.Description))
                     });
                 }
-                
+
                 if (!result.Succeeded)
                 {
                     return BadRequest(new AuthResponseDto

@@ -12,6 +12,7 @@ namespace ubuntu_health_api.Controllers
     {
         private readonly IAppointmentService _appointmentService = appointmentService;
 
+        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAllAppointments()
         {
@@ -19,6 +20,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(appointments);
         }
 
+        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Appointment>> GetAppointmentById(int id)
         {
@@ -30,6 +32,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(appointment);
         }
 
+        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
         [HttpPost]
         public async Task<ActionResult> AddAppointment([FromBody] Appointment appointment)
         {
@@ -42,6 +45,7 @@ namespace ubuntu_health_api.Controllers
             return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.AppointmentId }, appointment);
         }
 
+        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAppointment(int id)
         {
@@ -54,6 +58,7 @@ namespace ubuntu_health_api.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAppointment(int id, [FromBody] Appointment appointment)
         {
