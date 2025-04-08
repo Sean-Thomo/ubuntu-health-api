@@ -73,6 +73,17 @@ namespace ubuntu_health_api.Controllers
                     Message = "Invalid request",
                 });
             }
+
+            var allowedRoles = new[] { "Admin", "Doctor", "Nurse", "Receptionist" };
+            if(!allowedRoles.Contains(request.Role))
+            {
+                return BadRequest(new AuthResponseDto 
+                { 
+                    IsSuccess = false, 
+                    Message = "Invalid role selection" 
+                });
+            }
+
             var userExists = await _userManager.FindByEmailAsync(request.Email);
             if (userExists != null)
                 return BadRequest(new AuthResponseDto 
@@ -103,10 +114,23 @@ namespace ubuntu_health_api.Controllers
                     Message = string.Join(", ", result.Errors.Select(e => e.Description)) 
                 });
 
+
+            var roleAssignment = await _userManager.AddToRoleAsync(user, request.Role);
+            if (!roleAssignment.Succeeded)
+            {
+                await _userManager.DeleteAsync(user);
+                return BadRequest(new AuthResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"Role assignment failed: {string.Join(", ", roleAssignment.Errors)}"
+                });
+            }
+
             return Ok(new AuthResponseDto 
             { 
                 IsSuccess = true, 
-                Message = "User created successfully!"
+                Message = "User created successfully!",
+                Roles = [request.Role]
             });
         }
 
