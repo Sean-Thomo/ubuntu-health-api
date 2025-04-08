@@ -246,38 +246,38 @@ namespace ubuntu_health_api.Controllers
             });
         }
 
-[HttpGet("user-roles")]
-[Authorize(Roles = "SystemAdmin,PracticeAdmin")]
-public async Task<IActionResult> GetUserRoles(string email)
-{
-    var user = await _userManager.FindByEmailAsync(email);
-    if (user == null)
-    {
-        return NotFound(new AuthResponseDto
+        [HttpGet("user-roles")]
+        [Authorize(Roles = "SystemAdmin,PracticeAdmin")]
+        public async Task<IActionResult> GetUserRoles(string email)
         {
-            IsSuccess = false,
-            Message = "User not found"
-        });
-    }
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound(new AuthResponseDto
+                {
+                    IsSuccess = false,
+                    Message = "User not found"
+                });
+            }
 
-    // Security check for tenant boundaries
-    var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-    var currentUser = await _userManager.FindByEmailAsync(currentUserEmail);
-    
-    if (User.IsInRole("PracticeAdmin") && user.TenantId != currentUser.TenantId)
-    {
-        return Forbid();
-    }
+            // Security check for tenant boundaries
+            var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            var currentUser = await _userManager.FindByEmailAsync(currentUserEmail);
+            
+            if (User.IsInRole("PracticeAdmin") && user.TenantId != currentUser.TenantId)
+            {
+                return Forbid();
+            }
 
-    var roles = await _userManager.GetRolesAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
 
-    return Ok(new
-    {
-        IsSuccess = true,
-        Email = email,
-        Roles = roles
-    });
-}
+            return Ok(new
+            {
+                IsSuccess = true,
+                Email = email,
+                Roles = roles
+            });
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto request)
