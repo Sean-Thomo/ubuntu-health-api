@@ -4,10 +4,10 @@ namespace ubuntu_health_api.Services
 {
     public interface IPatientService
     {
-        Task<IEnumerable<Patient>> GetAllPatientsAsync();
-        Task<Patient> GetPatientByIdAsync(int id);
-        Task AddPatientAsync(Patient patient);
-        Task DeletePatientAsync(int id);
-        Task UpdatePatientAsync(Patient patient);
+        Task<IEnumerable<Patient>> GetAllPatientsAsync(string tenantId);
+        Task<Patient> GetPatientByIdAsync(int id, string tenantId);
+        Task AddPatientAsync(Patient patient, string tenantId);
+        Task DeletePatientAsync(int id, string _tenantId);
+        Task UpdatePatientAsync(Patient patient, string _tenantId);
     }
 }

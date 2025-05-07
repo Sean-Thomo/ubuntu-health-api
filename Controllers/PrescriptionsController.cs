@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using ubuntu_health_api.Models;
 using ubuntu_health_api.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ubuntu_health_api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PrescriptionsController(IPrescriptionService prescriptionService) : ControllerBase
@@ -17,6 +19,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(prescriptions);
         }
 
+        [Authorize(Roles = "Physician")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Prescription>> GetPrescriptionById(int id)
         {
@@ -28,6 +31,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(prescription);
         }
 
+        [Authorize(Roles = "Physician")]
         [HttpPost]
         public async Task<ActionResult> AddPrescription([FromBody] Prescription prescription)
         {
@@ -40,6 +44,7 @@ namespace ubuntu_health_api.Controllers
             return CreatedAtAction(nameof(GetPrescriptionById), new { id = prescription.PrescriptionId }, prescription);
         }
 
+        [Authorize(Roles = "Physician")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAppointment(int id)
         {
@@ -53,6 +58,7 @@ namespace ubuntu_health_api.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Physician")]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdatePrescription(int id, [FromBody] Prescription prescription)
         {

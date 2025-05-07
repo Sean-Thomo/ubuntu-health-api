@@ -13,14 +13,15 @@ namespace ubuntu_health_api.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Patient>> GetAllPatientsAsync()
+        public async Task<IEnumerable<Patient>> GetAllPatientsAsync(string tenantId)
         {
-            return await _context.Patients.ToListAsync();
+            return await _context.Patients.Where(p => p.TenantId == tenantId).ToListAsync();
         }
 
-        public async Task<Patient> GetPatientByIdAsync(int id)
+        public async Task<Patient> GetPatientByIdAsync(int id, string tenantId)
         {
-            return await _context.Patients.FindAsync(id);
+            var patient = await _context.Patients.FirstOrDefaultAsync(p => p.PatientId == id && p.TenantId == tenantId) ?? throw new KeyNotFoundException($"Patient with ID {id} and Tenant ID {tenantId} was not found.");
+            return patient;
         }
 
         public async Task AddPatientAsync(Patient patient)

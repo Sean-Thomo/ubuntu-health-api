@@ -3,7 +3,7 @@ namespace ubuntu_health_api.Models
     public class Prescription 
     {
         public int PrescriptionId { get; set; }
-        public int TenantId { get; set; }
+        public required string TenantId { get; set; }
         public int PatientId { get; set; }
         public int PractitionerId { get; set; }
         public required string Dosage { get; set; }
