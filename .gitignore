@@ -51,11 +51,6 @@ _ReSharper.*
 
 # Ignore test results
 TestResults/
-<<<<<<< HEAD
 *.trx
 
 .env
-.env
-=======
-*.trx
->>>>>>> d32f5ce0c208a28fd03e6bed9803d2132d1c087b
