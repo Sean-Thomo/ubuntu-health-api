@@ -8,11 +8,16 @@ namespace ubuntu_health_api.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class AppointmentsController(IAppointmentService appointmentService) : ControllerBase
+    public class AppointmentsController : ControllerBase
     {
-        private readonly IAppointmentService _appointmentService = appointmentService;
+        private readonly IAppointmentService _appointmentService;
 
-        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
+        public AppointmentsController(IAppointmentService appointmentService)
+        {
+            _appointmentService = appointmentService;
+        }
+
+        [Authorize(Roles = "admin,doctor,nurse,receptionist")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAllAppointments()
         {
@@ -20,7 +25,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(appointments);
         }
 
-        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
+        [Authorize(Roles = "admin,doctor,nurse,receptionist")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Appointment>> GetAppointmentById(int id)
         {
@@ -32,7 +37,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(appointment);
         }
 
-        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
+        [Authorize(Roles = "admin,doctor,nurse,receptionist")]
         [HttpPost]
         public async Task<ActionResult> AddAppointment([FromBody] Appointment appointment)
         {
@@ -45,7 +50,7 @@ namespace ubuntu_health_api.Controllers
             return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.AppointmentId }, appointment);
         }
 
-        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
+        [Authorize(Roles = "admin,doctor,nurse,receptionist")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAppointment(int id)
         {
@@ -58,7 +63,7 @@ namespace ubuntu_health_api.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
+        [Authorize(Roles = "admin,doctor,nurse,receptionist")]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAppointment(int id, [FromBody] Appointment appointment)
         {

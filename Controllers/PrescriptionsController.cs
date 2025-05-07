@@ -19,7 +19,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(prescriptions);
         }
 
-        [Authorize(Roles = "Physician")]
+        [Authorize(Roles = "doctor")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Prescription>> GetPrescriptionById(int id)
         {
@@ -31,7 +31,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(prescription);
         }
 
-        [Authorize(Roles = "Physician")]
+        [Authorize(Roles = "doctor")]
         [HttpPost]
         public async Task<ActionResult> AddPrescription([FromBody] Prescription prescription)
         {
@@ -44,7 +44,7 @@ namespace ubuntu_health_api.Controllers
             return CreatedAtAction(nameof(GetPrescriptionById), new { id = prescription.PrescriptionId }, prescription);
         }
 
-        [Authorize(Roles = "Physician")]
+        [Authorize(Roles = "doctor")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAppointment(int id)
         {
@@ -58,7 +58,7 @@ namespace ubuntu_health_api.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Physician")]
+        [Authorize(Roles = "doctor")]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdatePrescription(int id, [FromBody] Prescription prescription)
         {

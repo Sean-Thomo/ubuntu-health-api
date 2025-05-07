@@ -28,7 +28,7 @@ namespace ubuntu_health_api.Controllers
             return tenantId;
         }
 
-        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
+        [Authorize(Roles = "admin,doctor,nurse,receptionist")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetAllPatients()
         {
@@ -39,7 +39,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(patients);
         }
 
-        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
+        [Authorize(Roles = "admin,doctor,nurse,receptionist")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Patient>> GetPatientById(int id)
         {
@@ -54,7 +54,7 @@ namespace ubuntu_health_api.Controllers
             return Ok(patient);
         }
 
-        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
+        [Authorize(Roles = "admin,doctor,nurse,receptionist")]
         [HttpPost]
         public async Task<ActionResult> AddPatient([FromBody] Patient patient)
         {
@@ -72,7 +72,7 @@ namespace ubuntu_health_api.Controllers
             return CreatedAtAction(nameof(GetPatientById), new { id = patient.PatientId }, patient);
         }
 
-        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
+        [Authorize(Roles = "admin,doctor,nurse,receptionist")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePatient(int id)
         {
@@ -89,7 +89,7 @@ namespace ubuntu_health_api.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Physician,Receptionist,Nurse,Admin")]
+        [Authorize(Roles = "admin,doctor,nurse,receptionist")]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdatePatient(int id, [FromBody] Patient patient)
         {
