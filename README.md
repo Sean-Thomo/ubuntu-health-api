@@ -77,7 +77,7 @@ The Ubuntu Health API follows a modular, service-oriented architecture to ensure
 
 ### Frontend:
 
-- _Backend services powered by [Ubuntu Health](https://github.com/Sean-Thomo/ubuntu-health)_
+- _Frontend services powered by [Ubuntu Health](https://github.com/Sean-Thomo/ubuntu-health)_
 
 ### Backend
 
