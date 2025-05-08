@@ -18,6 +18,7 @@ namespace ubuntu_health_api.Controllers
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Patient>>> GetAllPatients()
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
@@ -29,6 +30,7 @@ namespace ubuntu_health_api.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult<Patient>> GetPatientById(int id)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
@@ -42,6 +44,7 @@ namespace ubuntu_health_api.Controllers
     [HttpPost]
     public async Task<ActionResult> AddPatient([FromBody] Patient patient)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
@@ -53,6 +56,7 @@ namespace ubuntu_health_api.Controllers
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeletePatient(int id)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
@@ -66,6 +70,7 @@ namespace ubuntu_health_api.Controllers
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdatePatient(int id, [FromBody] Patient patient)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 

@@ -22,7 +22,7 @@ namespace ubuntu_health_api.Services
       var patient = await _patientRepository.GetPatientByIdAsync(id, tenantId);
       if (patient == null || patient.TenantId != tenantId)
       {
-        return null;
+        throw new KeyNotFoundException("Patient not found.");
       }
       return patient;
     }
