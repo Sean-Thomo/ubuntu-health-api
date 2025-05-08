@@ -4,8 +4,10 @@ using ubuntu_health_api.Models;
 
 namespace ubuntu_health_api.Data
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext(options)
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Practitioner> Practitioners { get; set; }
@@ -18,10 +20,17 @@ namespace ubuntu_health_api.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<ApplicationUser>()
-                .HasOne(u => u.Staff)
-                .WithOne()
-                .HasForeignKey<ApplicationUser>(u => u.StaffId);
+            modelBuilder.Entity<Patient>()
+                .HasIndex(p => p.IdNumber);
+
+            modelBuilder.Entity<Appointment>()
+                .HasIndex(a => a.AppointmentDate);
+
+            modelBuilder.Entity<Appointment>()
+                .HasIndex(a => a.AppointmentId);
+
+            modelBuilder.Entity<Invoice>()
+                .HasIndex(i => i.PatientId);
         }
     }
 }
