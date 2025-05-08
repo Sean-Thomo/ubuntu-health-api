@@ -3,14 +3,9 @@ using ubuntu_health_api.Repositories;
 
 namespace ubuntu_health_api.Services
 {
-  public class PatientService : IPatientService
+  public class PatientService(IPatientRepository patientRepository) : IPatientService
   {
-    private readonly IPatientRepository _patientRepository;
-
-    public PatientService(IPatientRepository patientRepository)
-    {
-      _patientRepository = patientRepository;
-    }
+    private readonly IPatientRepository _patientRepository = patientRepository;
 
     public async Task<IEnumerable<Patient>> GetAllPatientsAsync(string tenantId)
     {

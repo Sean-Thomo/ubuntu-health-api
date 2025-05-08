@@ -2,48 +2,48 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ubuntu_health_api.Helpers;
 using ubuntu_health_api.Models;
-using ubuntu_health_api.Repositories;
+using ubuntu_health_api.Services;
 
 namespace ubuntu_health_api.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class InvoiceController(IInvoiceRepository invoiceRepository, IPatientRepository patientRepository, IHttpContextAccessor httpContextAccessor) : ControllerBase
+  public class InvoiceController(IInvoiceService invoiceService, IHttpContextAccessor httpContextAccessor) : ControllerBase
   {
-    private readonly IInvoiceRepository _invoiceRepository = invoiceRepository;
-    private readonly IPatientRepository _patientRepository = patientRepository;
+    private readonly IInvoiceService _invoiceService = invoiceService;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     [HttpGet]
-    [Authorize(Roles = "Admin, Receptionist")]
+    [Authorize(Roles = "admin, receptionist")]
     public async Task<IActionResult> GetAllInvoices()
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      var invoices = await _invoiceRepository.GetAllInvoicesAsync(tenantId);
+      var invoices = await _invoiceService.GetAllInvoicesAsync(tenantId);
       return Ok(invoices);
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "Admin, Receptionist")]
+    [Authorize(Roles = "admin, receptionist")]
     public async Task<IActionResult> GetInvoiceById(int id)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      var invoice = await _invoiceRepository.GetInvoiceByIdAsync(id, tenantId);
-      if (invoice == null)
-      {
-        return NotFound();
-      }
+      var invoice = await _invoiceService.GetInvoiceByIdAsync(id, tenantId);
+      if (invoice == null) return NotFound();
+
       return Ok(invoice);
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin, Receptionist")]
+    [Authorize(Roles = "admin, receptionist")]
     public async Task<IActionResult> CreateInvoice([FromBody] Invoice invoice)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
@@ -52,52 +52,37 @@ namespace ubuntu_health_api.Controllers
         return BadRequest("Invoice cannot be null");
       }
 
-      var patient = await _patientRepository.GetPatientByIdAsync(invoice.PatientId, invoice.TenantId);
-      if (patient == null)
-      {
-        return NotFound($"Patient with ID {invoice.PatientId} not found.");
-      }
-
-      await _invoiceRepository.AddInvoiceAsync(invoice, tenantId);
+      await _invoiceService.AddInvoiceAsync(invoice, tenantId);
       return CreatedAtAction(nameof(GetInvoiceById), new { id = invoice.InvoiceId }, invoice);
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin, Receptionist")]
+    [Authorize(Roles = "admin, receptionist")]
     public async Task<IActionResult> UpdateInvoice(int id, [FromBody] Invoice invoice)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      if (id != invoice.InvoiceId)
-      {
-        return BadRequest("Invoice ID mismatch");
-      }
+      var existingInvoice = await _invoiceService.GetInvoiceByIdAsync(id, tenantId);
+      if (existingInvoice == null) return NotFound();
 
-      var existingInvoice = await _invoiceRepository.GetInvoiceByIdAsync(id, tenantId);
-      if (existingInvoice == null)
-      {
-        return NotFound($"Invoice with ID {id} not found.");
-      }
-
-      await _invoiceRepository.UpdateInvoiceAsync(invoice);
+      await _invoiceService.UpdateInvoiceAsync(invoice, tenantId);
       return NoContent();
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin, Receptionist")]
+    [Authorize(Roles = "admin, receptionist")]
     public async Task<IActionResult> DeleteInvoice(int id)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      var invoice = await _invoiceRepository.GetInvoiceByIdAsync(id, tenantId);
-      if (invoice == null)
-      {
-        return NotFound($"Invoice with ID {id} not found.");
-      }
+      var invoice = await _invoiceService.GetInvoiceByIdAsync(id, tenantId);
+      if (invoice == null) return NotFound();
 
-      await _invoiceRepository.DeleteInvoiceAsync(id);
+      await _invoiceService.DeleteInvoiceAsync(id, tenantId);
       return NoContent();
     }
   }
