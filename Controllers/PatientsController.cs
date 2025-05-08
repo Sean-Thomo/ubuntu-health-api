@@ -33,10 +33,8 @@ namespace ubuntu_health_api.Controllers
       if (tenantId == null) return Forbid();
 
       var patient = await _patientService.GetPatientByIdAsync(id, tenantId);
-      if (patient == null)
-      {
-        return NotFound();
-      }
+      if (patient == null) return NotFound();
+
       return Ok(patient);
     }
 
@@ -46,13 +44,6 @@ namespace ubuntu_health_api.Controllers
     {
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
-
-      if (patient == null)
-      {
-        return BadRequest("Patient data is null.");
-      }
-
-      patient.TenantId = tenantId;
 
       await _patientService.AddPatientAsync(patient, tenantId);
       return CreatedAtAction(nameof(GetPatientById), new { id = patient.PatientId }, patient);
@@ -65,12 +56,9 @@ namespace ubuntu_health_api.Controllers
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      var patient = await _patientService.GetPatientByIdAsync(id, tenantId);
-      if (patient == null)
-      {
-        return NotFound();
-      }
-      await _patientService.DeletePatientAsync(id, tenantId);
+      var result = await _patientService.DeletePatientAsync(id, tenantId);
+      if (!result) return NotFound();
+
       return NoContent();
     }
 
@@ -81,20 +69,9 @@ namespace ubuntu_health_api.Controllers
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      if (id != patient.PatientId)
-      {
-        return BadRequest();
-      }
+      var result = await _patientService.UpdatePatientAsync(patient, tenantId);
+      if (!result) return NotFound();
 
-      var existingPatient = await _patientService.GetPatientByIdAsync(id, tenantId);
-      if (existingPatient == null)
-      {
-        return NotFound();
-      }
-
-      patient.TenantId = tenantId;
-
-      await _patientService.UpdatePatientAsync(patient, tenantId);
       return NoContent();
     }
   }
