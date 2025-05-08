@@ -1,7 +1,7 @@
 namespace ubuntu_health_api.Models.DTO
 {
-    public class AssignRoleDto
-    {
+  public class AssignRoleDto
+  {
     public bool IsSuccess { get; set; }
     public string? Token { get; set; }
     public string? RefreshToken { get; set; }
@@ -9,5 +9,5 @@ namespace ubuntu_health_api.Models.DTO
     public string? Email { get; set; }
     public IEnumerable<string>? Roles { get; set; }
     public IEnumerable<string>? Errors { get; set; }
-    }
+  }
 }

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ubuntu_health_api.Models 
+namespace ubuntu_health_api.Models
 {
   public class Tenant
   {

@@ -1,7 +1,7 @@
 namespace ubuntu_health_api.Models.DTO
 {
-public class AuthResponseDto
-{
+  public class AuthResponseDto
+  {
     public bool IsSuccess { get; set; }
     public string? Token { get; set; }
     public string? RefreshToken { get; set; }
@@ -10,5 +10,5 @@ public class AuthResponseDto
     public string? LicenseNumber { get; set; }
     public IEnumerable<string>? Roles { get; set; }
     public IEnumerable<string>? Errors { get; set; }
-}
+  }
 }
