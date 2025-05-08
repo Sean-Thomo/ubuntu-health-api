@@ -75,6 +75,10 @@ The Ubuntu Health API follows a modular, service-oriented architecture to ensure
 
 ## Tech Stack
 
+### Frontend:
+
+- _Backend services powered by [Ubuntu Health](https://github.com/Sean-Thomo/ubuntu-health)_
+
 ### Backend
 
 - **ASP.NET Core 7.0**: Framework for building the API.
