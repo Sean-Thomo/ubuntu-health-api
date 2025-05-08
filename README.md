@@ -88,7 +88,6 @@ The Ubuntu Health API follows a modular, service-oriented architecture to ensure
 
 ### Other Tools
 
-- **Swagger/OpenAPI**: API documentation and testing.
 - **DotNetEnv**: Load environment variables for configuration.
 - **Migrations**: Database schema management using EF Core migrations.
 
