@@ -5,6 +5,7 @@ namespace ubuntu_health_api.Models
         public int InvoiceId { get; set; }
         public int PatientId { get; set; }
         public required string TenantId { get; set; }
+        public int AppointmentId { get; set; }
         public required string IssueDate { get; set; }
         public decimal TotalAmount { get; set; }
         public string? Status { get; set; }

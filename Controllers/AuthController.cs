@@ -100,10 +100,6 @@ namespace ubuntu_health_api.Controllers
               Email = request.Email,
               UserName = request.Email,
               SecurityStamp = Guid.NewGuid().ToString(),
-              LicenseNumber = request.LicenseNumber,
-              Specialty = request.Specialty,
-              PracticeName = request.PracticeName,
-              PracticePhone = request.PracticePhone,
           };
 
           var result = await _userManager.CreateAsync(user, request.Password);
@@ -349,19 +345,9 @@ namespace ubuntu_health_api.Controllers
               authClaims.Add(new Claim("TenantId", tenantId));
           }
 
-          if (!string.IsNullOrEmpty(user.LicenseNumber))
-          {
-              authClaims.Add(new Claim("LicenseNumber", user.LicenseNumber));
-          }
-
           foreach (var role in lowerCaseRoles)
           {
               authClaims.Add(new Claim(ClaimTypes.Role, role));
-          }
-
-          if (string.IsNullOrEmpty(user.LicenseNumber))
-          {
-              Console.WriteLine("LicenseNumber is null for user: " + user.Email);
           }
 
           var token = GenerateJwtToken(authClaims);
@@ -371,7 +357,6 @@ namespace ubuntu_health_api.Controllers
               IsSuccess = true,
               Token = new JwtSecurityTokenHandler().WriteToken(token),
               Email = user.Email,
-              LicenseNumber = user.LicenseNumber,
               Roles = userRoles,
               Message = "Login successful"
           });

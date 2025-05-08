@@ -11,6 +11,7 @@ namespace ubuntu_health_api.Models
         public string? AppointmentType { get; set; }
         public string? Status { get; set; }
         public string? Notes { get; set; }
+        public string? DiagnosisCode { get; set; }
         public required string CreatedAt { get; set; }
         public required string UpdatedAt { get; set; }
     }

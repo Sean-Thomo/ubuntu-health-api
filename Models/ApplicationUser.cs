@@ -11,11 +11,5 @@ namespace ubuntu_health_api.Models
         public string? Role { get; set; } // Admin, Receptionist, Nurse
         public string? CreatedAt { get; set; }
         public string? UpdatedAt { get; set; }
-        public int? StaffId { get; set; }
-        public virtual Staff? Staff { get; set; }
-        public string? LicenseNumber { get; internal set; }
-        public string? Specialty { get; internal set; }
-        public string? PracticeName { get; internal set; }
-        public string? PracticePhone { get; internal set; }
     }
 }
