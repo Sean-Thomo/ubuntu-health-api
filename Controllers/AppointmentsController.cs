@@ -19,6 +19,7 @@ namespace ubuntu_health_api.Controllers
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Appointment>>> GetAllAppointments()
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
@@ -30,6 +31,7 @@ namespace ubuntu_health_api.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult<Appointment>> GetAppointmentById(int id)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
@@ -45,6 +47,7 @@ namespace ubuntu_health_api.Controllers
     [HttpPost]
     public async Task<ActionResult> AddAppointment([FromBody] Appointment appointment)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
@@ -61,6 +64,7 @@ namespace ubuntu_health_api.Controllers
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteAppointment(int id)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
@@ -77,19 +81,13 @@ namespace ubuntu_health_api.Controllers
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateAppointment(int id, [FromBody] Appointment appointment)
     {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      if (id != appointment.AppointmentId)
-      {
-        return BadRequest();
-      }
-      var existingAppointment = await _appointmentService.GetAppointmentByIdAsync(id, tenantId);
-      if (existingAppointment == null)
-      {
-        return NotFound();
-      }
-      await _appointmentService.UpdateAppointmentAsync(appointment, tenantId);
+      var result = await _appointmentService.UpdateAppointmentAsync(appointment, tenantId);
+      if (!result) return NotFound();
+
       return NoContent();
     }
   }

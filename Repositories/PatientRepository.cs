@@ -4,43 +4,44 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ubuntu_health_api.Repositories
 {
-    public class PatientRepository : IPatientRepository
+  public class PatientRepository(AppDbContext context) : IPatientRepository
+  {
+    private readonly AppDbContext _context = context;
+
+    public async Task<IEnumerable<Patient>> GetAllPatientsAsync(string tenantId)
     {
-        private readonly AppDbContext _context;
-
-        public PatientRepository(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IEnumerable<Patient>> GetAllPatientsAsync(string tenantId)
-        {
-            return await _context.Patients.Where(p => p.TenantId == tenantId).ToListAsync();
-        }
-
-        public async Task<Patient> GetPatientByIdAsync(int id, string tenantId)
-        {
-            var patient = await _context.Patients.FirstOrDefaultAsync(p => p.PatientId == id && p.TenantId == tenantId) ?? throw new KeyNotFoundException($"Patient with ID {id} and Tenant ID {tenantId} was not found.");
-            return patient;
-        }
-
-        public async Task AddPatientAsync(Patient patient)
-        {
-            await _context.Patients.AddAsync(patient);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeletePatientAsync(int id)
-        {
-            var patient = await _context.Patients.FindAsync(id);
-            _context.Patients.Remove(patient);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdatePatientAsync(Patient patient)
-        {
-            _context.Patients.Update(patient);
-            await _context.SaveChangesAsync();
-        }
+      return await _context.Patients.Where(p => p.TenantId == tenantId).ToListAsync();
     }
+
+    public async Task<Patient> GetPatientByIdAsync(int id, string tenantId)
+    {
+      var patient = await _context.Patients.FirstOrDefaultAsync(
+        p => p.PatientId == id && p.TenantId == tenantId) ??
+        throw new KeyNotFoundException(
+          $"Patient with ID {id} and Tenant ID {tenantId} was not found.");
+      return patient;
+    }
+
+    public async Task AddPatientAsync(Patient patient)
+    {
+      await _context.Patients.AddAsync(patient);
+      await _context.SaveChangesAsync();
+    }
+
+    public async Task DeletePatientAsync(int id)
+    {
+      var patient = await _context.Patients.FindAsync(id);
+      if (patient != null)
+      {
+        _context.Patients.Remove(patient);
+        await _context.SaveChangesAsync();
+      }
+    }
+
+    public async Task UpdatePatientAsync(Patient patient)
+    {
+      _context.Patients.Update(patient);
+      await _context.SaveChangesAsync();
+    }
+  }
 }
