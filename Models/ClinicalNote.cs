@@ -2,8 +2,9 @@ namespace ubuntu_health_api.Models
 {
   public class ClinicalNote
   {
-    public required string NoteId { get; set; }
-    public required string PatientId { get; set; }
+    public int PatientId { get; set; }
+    public required int NoteId { get; set; }
+    public required string TenantId { get; set; }
     public required string DoctorId { get; set; }
     public DateTime CreatedAt { get; set; }
     public required string Content { get; set; }

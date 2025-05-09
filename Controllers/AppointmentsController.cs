@@ -79,7 +79,7 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateAppointment(int id, [FromBody] Appointment appointment)
+    public async Task<ActionResult> UpdateAppointment([FromBody] Appointment appointment)
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);

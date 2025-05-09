@@ -7,7 +7,7 @@ namespace ubuntu_health_api.Repositories
     Task<IEnumerable<ClinicalNote>> GetAllClinicalNotesAsync(string tenantId);
     Task<ClinicalNote> GetClinicalNoteByIdAsync(int id, string tenantId);
     Task AddClinicalNoteAsync(ClinicalNote clinicalNote);
-    Task DeleteClinicalNoteAsync(int id, string tenantId);
+    Task DeleteClinicalNoteAsync(int id);
     Task UpdateClinicalNoteAsync(ClinicalNote clinicalNote);
   }
 }

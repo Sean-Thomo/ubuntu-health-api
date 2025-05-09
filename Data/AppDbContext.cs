@@ -15,6 +15,7 @@ namespace ubuntu_health_api.Data
     public DbSet<Invoice> Invoices { get; set; }
     public DbSet<Staff> Staff { get; set; }
     public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<ClinicalNote> ClinicalNotes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
