@@ -4,10 +4,8 @@ using ubuntu_health_api.Models;
 
 namespace ubuntu_health_api.Data
 {
-  public class AppDbContext : IdentityDbContext<ApplicationUser>
+  public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<ApplicationUser>(options)
   {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<Practitioner> Practitioners { get; set; }
