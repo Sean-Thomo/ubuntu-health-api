@@ -7,6 +7,7 @@ using ubuntu_health_api.Repositories;
 using ubuntu_health_api.Services;
 using ubuntu_health_api.Data;
 using ubuntu_health_api.Models;
+using ubuntu_health_api.Helpers;
 
 DotNetEnv.Env.Load();
 
@@ -14,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 var jwtSecret = builder.Configuration["JWT:Secret"];
 var issuer = builder.Configuration["JWT:ValidIssuer"];
 
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
