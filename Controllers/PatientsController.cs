@@ -3,6 +3,7 @@ using ubuntu_health_api.Models;
 using ubuntu_health_api.Services;
 using Microsoft.AspNetCore.Authorization;
 using ubuntu_health_api.Helpers;
+using ubuntu_health_api.Models.DTO;
 
 namespace ubuntu_health_api.Controllers
 {
@@ -16,7 +17,7 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Patient>>> GetAllPatients()
+    public async Task<ActionResult<IEnumerable<PatientDto>>> GetAllPatients()
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
@@ -28,7 +29,7 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Patient>> GetPatientById(int id)
+    public async Task<ActionResult<PatientDto>> GetPatientById(int id)
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);

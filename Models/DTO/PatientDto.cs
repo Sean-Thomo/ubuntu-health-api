@@ -3,6 +3,8 @@ namespace ubuntu_health_api.Models.DTO
   public class PatientDto
   {
     public int PatientId { get; set; }
+    public required string TenantId { get; set; }
+
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? IdNumber { get; set; }
