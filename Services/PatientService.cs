@@ -23,7 +23,7 @@ namespace ubuntu_health_api.Services
     public async Task<PatientDto> GetPatientByIdAsync(int id, string tenantId)
     {
       var patient = await _patientRepository.GetPatientByIdAsync(id, tenantId);
-      if (patient == null || patient.TenantId != tenantId)
+      if (patient == null)
       {
         throw new KeyNotFoundException("Patient not found.");
       }
@@ -39,7 +39,7 @@ namespace ubuntu_health_api.Services
     public async Task<bool> DeletePatientAsync(int id, string tenantId)
     {
       var patient = await _patientRepository.GetPatientByIdAsync(id, tenantId);
-      if (patient == null || patient.TenantId != tenantId)
+      if (patient == null)
       {
         return false;
       }
@@ -50,7 +50,7 @@ namespace ubuntu_health_api.Services
     public async Task<bool> UpdatePatientAsync(Patient patient, string tenantId)
     {
       var existingPatient = await _patientRepository.GetPatientByIdAsync(patient.PatientId, tenantId);
-      if (existingPatient == null || existingPatient.TenantId != tenantId)
+      if (existingPatient == null)
       {
         return false;
       }
