@@ -7,7 +7,7 @@ namespace ubuntu_health_api.Models.DTO
     public string? RefreshToken { get; set; }
     public string? Message { get; set; }
     public string? Email { get; set; }
-    public string? LicenseNumber { get; set; }
+    public string? TenantId { get; set; }
     public IEnumerable<string>? Roles { get; set; }
     public IEnumerable<string>? Errors { get; set; }
   }

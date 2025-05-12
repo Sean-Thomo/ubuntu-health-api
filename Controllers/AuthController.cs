@@ -92,9 +92,20 @@ namespace ubuntu_health_api.Controllers
           Message = "User already exists!",
         });
 
+      string tenantId;
+      if (string.IsNullOrEmpty(request.TenantId))
+      {
+        tenantId = $"org-{Guid.NewGuid().ToString()[..8]}";
+      }
+      else
+      {
+        tenantId = request.TenantId;
+      }
+
+
       var user = new ApplicationUser
       {
-        TenantId = request.TenantId,
+        TenantId = tenantId,
         FirstName = request.FirstName,
         LastName = request.LastName,
         Email = request.Email,
@@ -125,6 +136,7 @@ namespace ubuntu_health_api.Controllers
       return Ok(new AuthResponseDto
       {
         IsSuccess = true,
+        TenantId = tenantId,
         Message = "User created successfully!",
         Roles = [request.Role]
       });
@@ -341,12 +353,6 @@ namespace ubuntu_health_api.Controllers
         new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
       };
 
-      var tenantId = user.TenantId;
-      if (!string.IsNullOrEmpty(tenantId))
-      {
-        authClaims.Add(new Claim("TenantId", tenantId));
-      }
-
       foreach (var role in lowerCaseRoles)
       {
         authClaims.Add(new Claim(ClaimTypes.Role, role));
@@ -358,9 +364,11 @@ namespace ubuntu_health_api.Controllers
       {
         IsSuccess = true,
         Token = new JwtSecurityTokenHandler().WriteToken(token),
+        RefreshToken = null,
+        Message = "Login successful",
         Email = user.Email,
+        TenantId = user.TenantId,
         Roles = userRoles,
-        Message = "Login successful"
       });
     }
 
