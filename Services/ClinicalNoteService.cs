@@ -1,25 +1,32 @@
+using AutoMapper;
 using ubuntu_health_api.Models;
+using ubuntu_health_api.Models.DTO;
 using ubuntu_health_api.Repositories;
 
 namespace ubuntu_health_api.Services
 {
-  public class ClinicalNoteService(IClinicalNoteRepository clinicalNoteRepository) : IClinicalNoteService
+  public class ClinicalNoteService(IClinicalNoteRepository clinicalNoteRepository, IMapper mapper) : IClinicalNoteService
   {
     private readonly IClinicalNoteRepository _clinicalNoteRepository = clinicalNoteRepository;
+    private readonly IMapper _mapper = mapper;
 
-    public async Task<IEnumerable<ClinicalNote>> GetAllClinicalNotesAsync(string tenantId)
+    public async Task<IEnumerable<ClinicalNoteDto>> GetAllClinicalNotesAsync(string tenantId)
     {
-      return await _clinicalNoteRepository.GetAllClinicalNotesAsync(tenantId);
+
+      var clinicalNote = await _clinicalNoteRepository.GetAllClinicalNotesAsync(tenantId);
+      if (clinicalNote == null)
+      {
+        throw new KeyNotFoundException("No Clinical Notes Found");
+      }
+
+      return _mapper.Map<IEnumerable<ClinicalNoteDto>>(clinicalNote);
     }
 
-    public async Task<ClinicalNote> GetClinicalNoteByIdAsync(int id, string tenantId)
+    public async Task<ClinicalNoteDto> GetClinicalNoteByIdAsync(int id, string tenantId)
     {
-      var clinicalNote = await _clinicalNoteRepository.GetClinicalNoteByIdAsync(id, tenantId);
-      if (clinicalNote == null || clinicalNote.TenantId != tenantId)
-      {
-        throw new KeyNotFoundException("Clinical note not found.");
-      }
-      return clinicalNote;
+      var clinicalNote = await _clinicalNoteRepository.GetClinicalNoteByIdAsync(id, tenantId) ??
+      throw new KeyNotFoundException("Clinical note not found.");
+      return _mapper.Map<ClinicalNoteDto>(clinicalNote);
     }
 
     public async Task AddClinicalNoteAsync(ClinicalNote clinicalNote, string tenantId)
@@ -31,7 +38,7 @@ namespace ubuntu_health_api.Services
     public async Task<bool> DeleteClinicalNoteAsync(int id, string tenantId)
     {
       var clinicalNote = await _clinicalNoteRepository.GetClinicalNoteByIdAsync(id, tenantId);
-      if (clinicalNote == null || clinicalNote.TenantId != tenantId)
+      if (clinicalNote == null)
       {
         return false;
       }
@@ -42,10 +49,11 @@ namespace ubuntu_health_api.Services
     public async Task<bool> UpdateClinicalNoteAsync(ClinicalNote clinicalNote, string tenantId)
     {
       var existingClinicalNote = await _clinicalNoteRepository.GetClinicalNoteByIdAsync(clinicalNote.NoteId, tenantId);
-      if (existingClinicalNote == null || existingClinicalNote.TenantId != tenantId)
+      if (existingClinicalNote == null)
       {
         return false;
       }
+
       clinicalNote.TenantId = tenantId;
       await _clinicalNoteRepository.UpdateClinicalNoteAsync(clinicalNote);
       return true;

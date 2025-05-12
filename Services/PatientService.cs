@@ -22,11 +22,8 @@ namespace ubuntu_health_api.Services
 
     public async Task<PatientDto> GetPatientByIdAsync(int id, string tenantId)
     {
-      var patient = await _patientRepository.GetPatientByIdAsync(id, tenantId);
-      if (patient == null)
-      {
-        throw new KeyNotFoundException("Patient not found.");
-      }
+      var patient = await _patientRepository.GetPatientByIdAsync(id, tenantId) ??
+      throw new KeyNotFoundException("Patient not found.");
       return _mapper.Map<PatientDto>(patient);
     }
 

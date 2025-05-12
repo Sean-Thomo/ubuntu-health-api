@@ -69,11 +69,22 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdatePatient([FromBody] Patient patient)
+    public async Task<ActionResult> UpdatePatient(int id, [FromBody] Patient patient)
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
+
+      if (id != patient.PatientId)
+      {
+        return BadRequest();
+      }
+
+      var existingPatient = await _patientService.GetPatientByIdAsync(id, tenantId);
+      if (existingPatient == null)
+      {
+        return NotFound();
+      }
 
       var result = await _patientService.UpdatePatientAsync(patient, tenantId);
       if (!result) return NotFound();
