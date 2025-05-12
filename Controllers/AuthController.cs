@@ -336,7 +336,8 @@ namespace ubuntu_health_api.Controllers
 
       var authClaims = new List<Claim>
       {
-        new(ClaimTypes.Email, user.Email),
+        new(ClaimTypes.Email, user.Email ?? string.Empty),
+        new("TenantId", user.TenantId),
         new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
       };
 
