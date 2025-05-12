@@ -8,7 +8,7 @@ namespace ubuntu_health_api.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class InvoiceController(IInvoiceService invoiceService, IHttpContextAccessor httpContextAccessor) : ControllerBase
+  public class InvoicesController(IInvoiceService invoiceService, IHttpContextAccessor httpContextAccessor) : ControllerBase
   {
     private readonly IInvoiceService _invoiceService = invoiceService;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;

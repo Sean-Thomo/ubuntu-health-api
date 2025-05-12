@@ -32,7 +32,6 @@ namespace ubuntu_health_api.Repositories
 
     public async Task AddPatientAsync(Patient patient)
     {
-
       await _dbContext.Patients.AddAsync(patient);
       await _dbContext.SaveChangesAsync();
     }

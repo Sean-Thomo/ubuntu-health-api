@@ -5,6 +5,7 @@ namespace ubuntu_health_api.Models
   public class ApplicationUser : IdentityUser
   {
     public required string TenantId { get; set; }
+    public required string SubscriptionPlan { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Phone { get; set; }

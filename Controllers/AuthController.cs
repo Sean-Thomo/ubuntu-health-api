@@ -110,6 +110,7 @@ namespace ubuntu_health_api.Controllers
         LastName = request.LastName,
         Email = request.Email,
         UserName = request.Email,
+        SubscriptionPlan = request.SubscriptionPlan,
         SecurityStamp = Guid.NewGuid().ToString(),
       };
 

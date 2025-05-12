@@ -42,7 +42,8 @@ builder.Services.AddAuthentication(options =>
     ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
     ValidAudience = builder.Configuration["JWT:ValidAudience"],
     IssuerSigningKey = new SymmetricSecurityKey(
-          Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+          Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"] ??
+          throw new InvalidOperationException("JWT:Secret is not configured")))
   };
 });
 builder.Services.AddAuthorization();
@@ -59,13 +60,16 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
 builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
+builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<IClinicalNoteService, ClinicalNoteService>();
+builder.Services.AddScoped<IClinicalNoteRepository, ClinicalNoteRepository>();
 builder.Services.AddControllers();
 
 var app = builder.Build();

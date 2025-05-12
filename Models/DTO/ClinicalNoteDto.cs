@@ -1,13 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace ubuntu_health_api.Models
+namespace ubuntu_health_api.Models.DTO
 {
-  public class ClinicalNote
+  public class ClinicalNoteDto
   {
-    [Key]
     public required int NoteId { get; set; }
     public int PatientId { get; set; }
-    public required string TenantId { get; set; }
     public required string DoctorId { get; set; }
     public DateTime CreatedAt { get; set; }
     public required string Notes { get; set; }
