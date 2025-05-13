@@ -10,7 +10,8 @@ namespace ubuntu_health_api.Controllers
   [Authorize]
   [ApiController]
   [Route("api/[controller]")]
-  public class PatientsController(IPatientService patientService, IHttpContextAccessor httpContextAccessor) : ControllerBase
+  public class PatientsController(IPatientService patientService,
+  IHttpContextAccessor httpContextAccessor) : ControllerBase
   {
     private readonly IPatientService _patientService = patientService;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;

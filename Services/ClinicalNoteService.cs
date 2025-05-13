@@ -13,12 +13,7 @@ namespace ubuntu_health_api.Services
     public async Task<IEnumerable<ClinicalNoteDto>> GetAllClinicalNotesAsync(string tenantId)
     {
 
-      var clinicalNote = await _clinicalNoteRepository.GetAllClinicalNotesAsync(tenantId);
-      if (clinicalNote == null)
-      {
-        throw new KeyNotFoundException("No Clinical Notes Found");
-      }
-
+      var clinicalNote = await _clinicalNoteRepository.GetAllClinicalNotesAsync(tenantId) ?? throw new KeyNotFoundException("No Clinical Notes Found");
       return _mapper.Map<IEnumerable<ClinicalNoteDto>>(clinicalNote);
     }
 
