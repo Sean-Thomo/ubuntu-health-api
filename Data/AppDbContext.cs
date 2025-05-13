@@ -27,13 +27,38 @@ namespace ubuntu_health_api.Data
       modelBuilder.Entity<Appointment>(entity =>
       {
         entity.HasIndex(a => new { a.TenantId, a.PatientId });
-      })
+        entity.HasOne(a => a.Patient)
+              .WithMany(p => p.Appointments)
+              .HasForeignKey(a => a.PatientId)
+              .OnDelete(DeleteBehavior.Cascade);
+      });
 
-      modelBuilder.Entity<Appointment>()
-          .HasIndex(a => a.AppointmentId);
+      // ------ ClinicalNote ------
+      modelBuilder.Entity<ClinicalNote>(entity =>
+      {
+        entity.HasOne(c => c.Patient)
+              .WithMany(p => p.ClinicalNotes)
+              .HasForeignKey(c => c.PatientId)
+              .OnDelete(DeleteBehavior.Cascade);
+      });
 
-      modelBuilder.Entity<Invoice>()
-          .HasIndex(i => i.PatientId);
+      // ---- Prescription ----
+      modelBuilder.Entity<Prescription>(entity =>
+      {
+        entity.HasOne(p => p.Patient)
+            .WithMany(p => p.Prescriptions)
+            .HasForeignKey(p => p.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
+      });
+
+      // ---- Invoice ----
+      modelBuilder.Entity<Invoice>(entity =>
+      {
+        entity.HasOne(i => i.Patient)
+            .WithMany(p => p.Invoices)
+            .HasForeignKey(i => i.PatientId)
+            .OnDelete(DeleteBehavior.Restrict);
+      });
     }
   }
 }
