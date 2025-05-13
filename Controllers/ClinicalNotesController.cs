@@ -41,5 +41,50 @@ namespace ubuntu_health_api.Controllers
 
       return Ok(clinicalNote);
     }
+
+    [Authorize(Roles = "admin,doctor,nurse")]
+    [HttpPost]
+    public async Task<ActionResult> AddClinicalNote([FromBody] ClinicalNote clinicalNote)
+    {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
+      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
+      if (tenantId == null) return Forbid();
+
+      await _clinicalNoteService.AddClinicalNoteAsync(clinicalNote, tenantId);
+      return CreatedAtAction(nameof(GetClinicalNoteById), new { id = clinicalNote.NoteId }, clinicalNote);
+    }
+
+    [Authorize(Roles = "admin,doctor,nurse")]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteClinicalNote(int id)
+    {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
+      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
+      if (tenantId == null) return Forbid();
+
+      var result = await _clinicalNoteService.DeleteClinicalNoteAsync(id, tenantId);
+      if (!result) return NotFound();
+
+      return NoContent();
+    }
+
+    [Authorize(Roles = "admin,doctor,nurse")]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateClinicalNote(int id, [FromBody] ClinicalNote clinicalNote)
+    {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
+      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
+      if (tenantId == null) return Forbid();
+
+      if (id != clinicalNote.NoteId) return BadRequest();
+
+      var existingClinicalNote = await _clinicalNoteService.GetClinicalNoteByIdAsync(id, tenantId);
+      if (existingClinicalNote == null) return NotFound();
+
+      var result = await _clinicalNoteService.UpdateClinicalNoteAsync(clinicalNote, tenantId);
+      if (!result) return NotFound();
+
+      return NoContent();
+    }
   }
 }
