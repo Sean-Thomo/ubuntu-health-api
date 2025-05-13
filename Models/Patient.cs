@@ -24,6 +24,10 @@ namespace ubuntu_health_api.Models
     public string? EmergencyContactRelationship { get; set; }
     public string? MedicalAidName { get; set; }
     public string? MembershipNumber { get; set; }
+    public List<Appointment> Appointments { get; set; } = [];
+    public List<ClinicalNote> ClinicalNotes { get; set; } = [];
+    public List<Prescription> Prescriptions { get; set; } = [];
+    public List<Invoice> Invoices { get; set; } = [];
     public required string CreatedAt { get; set; }
     public required string UpdatedAt { get; set; }
   }

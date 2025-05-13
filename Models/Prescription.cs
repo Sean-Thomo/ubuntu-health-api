@@ -14,6 +14,7 @@ namespace ubuntu_health_api.Models
     public string? Status { get; set; }
     public List<PrescriptionMedication> Medications { get; set; } = [];
     public string? Instructions { get; set; }
+    public Patient? Patient { get; set; }
     public required string CreatedAt { get; set; }
     public required string UpdatedAt { get; set; }
   }

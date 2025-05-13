@@ -16,11 +16,18 @@ namespace ubuntu_health_api.Data
     {
       base.OnModelCreating(modelBuilder);
 
-      modelBuilder.Entity<Patient>()
-          .HasIndex(p => p.IdNumber);
+      // ------ Patient ------ 
+      modelBuilder.Entity<Patient>(entity =>
+      {
+        entity.HasIndex(p => p.TenantId);
+        entity.HasIndex(p => p.IdNumber);
+      });
 
-      modelBuilder.Entity<Appointment>()
-          .HasIndex(a => a.AppointmentDate);
+      // ------ Appointment ------
+      modelBuilder.Entity<Appointment>(entity =>
+      {
+        entity.HasIndex(a => new { a.TenantId, a.PatientId });
+      })
 
       modelBuilder.Entity<Appointment>()
           .HasIndex(a => a.AppointmentId);
