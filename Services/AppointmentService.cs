@@ -24,7 +24,7 @@ namespace ubuntu_health_api.Services
       return _mapper.Map<AppointmentResponseDto>(appointment);
     }
 
-    public async Task<AppointmentResponseDto> CreateAppointmentAsync(AppointmentCreateDto createDto, string tenantId)
+    public async Task<AppointmentResponseDto> AddAppointmentAsync(AppointmentCreateDto createDto, string tenantId)
     {
       var appointment = _mapper.Map<Appointment>(createDto);
       appointment.TenantId = tenantId;
@@ -36,16 +36,15 @@ namespace ubuntu_health_api.Services
       return _mapper.Map<AppointmentResponseDto>(appointment);
     }
 
-    public async Task<AppointmentResponseDto> UpdateAppointmentAsync(AppointmentUpdateDto updateDto, string tenantId)
+    public async Task<AppointmentResponseDto> UpdateAppointmentAsync(int id, AppointmentUpdateDto updateDto, string tenantId)
     {
-      var existingAppointment = await _appointmentRepository.GetAppointmentByIdAsync(updateDto., tenantId)
-          ?? throw new KeyNotFoundException($"Appointment with ID {updateDto.Id} not found for tenant {tenantId}");
+      var existingAppointment = await _appointmentRepository.GetAppointmentByIdAsync(id, tenantId)
+          ?? throw new KeyNotFoundException("Appointment not found");
 
       _mapper.Map(updateDto, existingAppointment);
       existingAppointment.UpdatedAt = DateTime.UtcNow;
 
       await _appointmentRepository.UpdateAppointmentAsync(existingAppointment, tenantId);
-
       return _mapper.Map<AppointmentResponseDto>(existingAppointment);
     }
 
@@ -60,16 +59,6 @@ namespace ubuntu_health_api.Services
       {
         return false;
       }
-    }
-
-    public Task AddAppointmentAsync(Appointment appointment)
-    {
-      throw new NotImplementedException();
-    }
-
-    Task<bool> IAppointmentService.UpdateAppointmentAsync(AppointmentUpdateDto appointment, string tenantId)
-    {
-      throw new NotImplementedException();
     }
   }
 }

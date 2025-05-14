@@ -7,8 +7,8 @@ namespace ubuntu_health_api.Services
   {
     Task<IEnumerable<AppointmentResponseDto>> GetAllAppointmentsAsync(string tenantId);
     Task<AppointmentResponseDto> GetAppointmentByIdAsync(int id, string tenantId);
-    Task AddAppointmentAsync(Appointment appointment);
-    Task<bool> UpdateAppointmentAsync(AppointmentUpdateDto appointment, string tenantId);
+    Task<AppointmentResponseDto> AddAppointmentAsync(AppointmentCreateDto appointment, string tenantId);
+    Task<AppointmentResponseDto> UpdateAppointmentAsync(int id, AppointmentUpdateDto appointment, string tenantId);
     Task<bool> DeleteAppointmentAsync(int id, string tenantId);
   }
 }

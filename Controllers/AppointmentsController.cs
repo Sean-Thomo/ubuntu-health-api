@@ -53,13 +53,8 @@ namespace ubuntu_health_api.Controllers
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      var appointment = _mapper.Map<Appointment>(request);
-      appointment.TenantId = tenantId;
-      appointment.CreatedAt = DateTime.UtcNow;
-      appointment.UpdatedAt = DateTime.UtcNow;
-
-      await _appointmentService.AddAppointmentAsync(appointment);
-      var responseDto = _mapper.Map<AppointmentResponseDto>(appointment);
+      await _appointmentService.AddAppointmentAsync(request, tenantId);
+      var responseDto = _mapper.Map<AppointmentResponseDto>(request);
       return CreatedAtAction(nameof(GetAppointmentById), new { id = responseDto.Id }, responseDto);
     }
 
@@ -87,15 +82,10 @@ namespace ubuntu_health_api.Controllers
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext!);
       if (tenantId == null) return Forbid();
 
-      var existingAppointment = await _appointmentService.GetAppointmentByIdAsync(id, tenantId);
+      var updatedAppointment = await _appointmentService.UpdateAppointmentAsync(id, requestDto, tenantId);
+      if (updatedAppointment == null) return NotFound();
 
-      if (existingAppointment == null) return NotFound();
-
-      _mapper.Map(requestDto, existingAppointment);
-      existingAppointment.UpdatedAt = DateTime.UtcNow;
-
-      await _appointmentService.UpdateAppointmentAsync(existingAppointment, tenantId);
-      return Ok(_mapper.Map<AppointmentResponseDto>(existingAppointment));
+      return Ok(_mapper.Map<AppointmentResponseDto>(updatedAppointment));
     }
 
   }
