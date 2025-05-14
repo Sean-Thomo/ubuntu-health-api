@@ -18,13 +18,8 @@ namespace ubuntu_health_api.Repositories
     public async Task<Appointment> GetAppointmentByIdAsync(int id, string tenantId)
     {
       var appointment = await _dbContext.Appointments
-          .FirstOrDefaultAsync(a => a.Id == id && a.TenantId == tenantId);
-
-      if (appointment == null)
-      {
-        throw new InvalidOperationException("Appointment not found or tenant mismatch");
-      }
-
+          .FirstOrDefaultAsync(a => a.Id == id && a.TenantId == tenantId)
+          ?? throw new InvalidOperationException("Appointment not found or tenant mismatch");
       return appointment;
     }
 
@@ -33,19 +28,6 @@ namespace ubuntu_health_api.Repositories
       await _dbContext.Appointments.AddAsync(appointment);
       await _dbContext.SaveChangesAsync();
     }
-
-    public async Task DeleteAppointmentAsync(int id, string tenantId)
-    {
-      var appointment = await _dbContext.Appointments
-          .FirstOrDefaultAsync(a => a.Id == id && a.TenantId == tenantId);
-
-      if (appointment != null)
-      {
-        _dbContext.Appointments.Remove(appointment);
-        await _dbContext.SaveChangesAsync();
-      }
-    }
-
     public async Task UpdateAppointmentAsync(Appointment appointment, string tenantId)
     {
       var existing = await _dbContext.Appointments
@@ -63,6 +45,18 @@ namespace ubuntu_health_api.Repositories
       existing.UpdatedAt = DateTime.UtcNow;
 
       await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteAppointmentAsync(int id, string tenantId)
+    {
+      var appointment = await _dbContext.Appointments
+          .FirstOrDefaultAsync(a => a.Id == id && a.TenantId == tenantId);
+
+      if (appointment != null)
+      {
+        _dbContext.Appointments.Remove(appointment);
+        await _dbContext.SaveChangesAsync();
+      }
     }
   }
 }

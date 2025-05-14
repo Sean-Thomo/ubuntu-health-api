@@ -12,6 +12,7 @@ namespace ubuntu_health_api.Helpers
       CreateMap<AppointmentCreateDto, Appointment>();
       CreateMap<AppointmentUpdateDto, Appointment>();
       CreateMap<Appointment, AppointmentResponseDto>();
+      CreateMap<AppointmentCreateDto, AppointmentResponseDto>();
 
       // Model -> Response DTO
       CreateMap<Patient, PatientDto>();
