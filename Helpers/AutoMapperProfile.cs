@@ -19,11 +19,16 @@ namespace ubuntu_health_api.Helpers
       CreateMap<ClinicalNote, ClinicalNoteResponseDto>();
       CreateMap<ClinicalNoteCreateDto, ClinicalNoteResponseDto>();
 
+      CreateMap<PrescriptionCreateDto, Prescription>();
+      CreateMap<PrescriptionUpdateDto, Prescription>();
+      CreateMap<Prescription, PrescriptionResponseDto>();
+      CreateMap<PrescriptionCreateDto, PrescriptionResponseDto>();
+
+
+
       // Model -> Response DTO
       CreateMap<Patient, PatientDto>();
       CreateMap<Invoice, InvoiceDto>();
-      CreateMap<ClinicalNote, ClinicalNoteDto>();
-      CreateMap<Prescription, PrescriptionDto>();
     }
   }
 }

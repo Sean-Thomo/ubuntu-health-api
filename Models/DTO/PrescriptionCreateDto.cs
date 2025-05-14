@@ -1,8 +1,7 @@
 namespace ubuntu_health_api.Models.DTO
 {
-  public class PrescriptionDto
+  public class PrescriptionCreateDto
   {
-    public int Id { get; set; }
     public int PatientId { get; set; }
     public int PractitionerId { get; set; }
     public required string Dosage { get; set; }

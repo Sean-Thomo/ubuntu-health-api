@@ -20,7 +20,7 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse")]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ClinicalNoteDto>>> GetAllClinicalNotes()
+    public async Task<ActionResult<IEnumerable<ClinicalNoteResponseDto>>> GetAllClinicalNotes()
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
@@ -32,7 +32,7 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<ClinicalNoteDto>> GetClinicalNoteById(int id)
+    public async Task<ActionResult<ClinicalNoteResponseDto>> GetClinicalNoteById(int id)
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);

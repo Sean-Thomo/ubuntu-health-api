@@ -5,10 +5,10 @@ namespace ubuntu_health_api.Services
 {
   public interface IPrescriptionService
   {
-    Task<IEnumerable<PrescriptionDto>> GetAllPrescriptionsAsync(string tenantId);
-    Task<PrescriptionDto> GetPrescriptionByIdAsync(int id, string tenantId);
-    Task AddPrescriptionAsync(Prescription prescription, string tenantId);
+    Task<IEnumerable<PrescriptionResponseDto>> GetAllPrescriptionsAsync(string tenantId);
+    Task<PrescriptionResponseDto> GetPrescriptionByIdAsync(int id, string tenantId);
+    Task<PrescriptionResponseDto> AddPrescriptionAsync(PrescriptionCreateDto prescription, string tenantId);
+    Task<PrescriptionResponseDto> UpdatePrescriptionAsync(int id, PrescriptionUpdateDto prescription, string tenantId);
     Task<bool> DeletePrescriptionAsync(int id, string tenantId);
-    Task<bool> UpdatePrescriptionAsync(Prescription prescription, string tenantId);
   }
 }

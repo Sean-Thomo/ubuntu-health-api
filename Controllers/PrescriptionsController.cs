@@ -3,16 +3,21 @@ using ubuntu_health_api.Models;
 using ubuntu_health_api.Services;
 using Microsoft.AspNetCore.Authorization;
 using ubuntu_health_api.Helpers;
+using ubuntu_health_api.Models.DTO;
+using AutoMapper;
 
 namespace ubuntu_health_api.Controllers
 {
   [Authorize]
   [ApiController]
   [Route("api/[controller]")]
-  public class PrescriptionsController(IPrescriptionService prescriptionService, IHttpContextAccessor httpContextAccessor) : ControllerBase
+  public class PrescriptionsController(IPrescriptionService prescriptionService,
+  IHttpContextAccessor httpContextAccessor,
+  IMapper mapper) : ControllerBase
   {
     private readonly IPrescriptionService _prescriptionService = prescriptionService;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly IMapper _mapper = mapper;
 
     [Authorize(Roles = "admin, doctor, nurse")]
     [HttpGet]
@@ -42,23 +47,34 @@ namespace ubuntu_health_api.Controllers
       return Ok(prescription);
     }
 
-    [Authorize(Roles = "doctor")]
+    [Authorize(Roles = "admin, doctor")]
     [HttpPost]
-    public async Task<ActionResult> AddPrescription([FromBody] Prescription prescription)
+    public async Task<ActionResult> AddPrescription([FromBody] PrescriptionCreateDto prescription)
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
-      if (prescription == null)
-      {
-        return BadRequest("Prescription data is null");
-      }
 
       await _prescriptionService.AddPrescriptionAsync(prescription, tenantId);
-      return CreatedAtAction(nameof(GetPrescriptionById), new { id = prescription.Id }, prescription);
+      var responseDto = _mapper.Map<PrescriptionResponseDto>(prescription);
+      return CreatedAtAction(nameof(GetPrescriptionById), new { id = responseDto.Id }, responseDto);
     }
 
-    [Authorize(Roles = "doctor")]
+    [Authorize(Roles = "admin, doctor")]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdatePrescription(int id, [FromBody] PrescriptionUpdateDto prescription)
+    {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
+      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
+      if (tenantId == null) return Forbid();
+
+      var updatedAppointment = await _prescriptionService.UpdatePrescriptionAsync(id, prescription, tenantId);
+      if (updatedAppointment == null) return NotFound();
+
+      return Ok(_mapper.Map<PrescriptionResponseDto>(updatedAppointment));
+    }
+
+    [Authorize(Roles = "admin, doctor")]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteAppointment(int id)
     {
@@ -76,29 +92,6 @@ namespace ubuntu_health_api.Controllers
       return NoContent();
     }
 
-    [Authorize(Roles = "doctor")]
-    [HttpPut("{id}")]
-    public async Task<ActionResult> UpdatePrescription(int id, [FromBody] Prescription prescription)
-    {
-      if (_httpContextAccessor.HttpContext == null) return Forbid();
-      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
-      if (tenantId == null) return Forbid();
 
-      if (id != prescription.Id)
-      {
-        return BadRequest();
-      }
-
-      var existingPrescription = await _prescriptionService.GetPrescriptionByIdAsync(id, tenantId);
-      if (existingPrescription == null)
-      {
-        return NotFound();
-      }
-
-      var result = await _prescriptionService.UpdatePrescriptionAsync(prescription, tenantId);
-      if (!result) return NotFound();
-
-      return NoContent();
-    }
   }
 }

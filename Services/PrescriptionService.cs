@@ -10,49 +10,55 @@ namespace ubuntu_health_api.Services
     private readonly IPrescriptionRepository _prescriptionRepository = prescriptionRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<IEnumerable<PrescriptionDto>> GetAllPrescriptionsAsync(string tenantId)
+    public async Task<IEnumerable<PrescriptionResponseDto>> GetAllPrescriptionsAsync(string tenantId)
     {
       var prescriptions = await _prescriptionRepository.GetAllPrescriptionsAsync(tenantId) ??
       throw new KeyNotFoundException("No Prescriptions Found");
-      return _mapper.Map<IEnumerable<PrescriptionDto>>(prescriptions);
+      return _mapper.Map<IEnumerable<PrescriptionResponseDto>>(prescriptions);
     }
 
-    public async Task<PrescriptionDto> GetPrescriptionByIdAsync(int id, string tenantId)
+    public async Task<PrescriptionResponseDto> GetPrescriptionByIdAsync(int id, string tenantId)
     {
       var prescription = await _prescriptionRepository.GetPrescriptionByIdAsync(id, tenantId) ??
       throw new KeyNotFoundException("Prescription not found");
-      return _mapper.Map<PrescriptionDto>(prescription);
+      return _mapper.Map<PrescriptionResponseDto>(prescription);
     }
 
-    public async Task AddPrescriptionAsync(Prescription prescription, string tenantId)
+    public async Task<PrescriptionResponseDto> AddPrescriptionAsync(PrescriptionCreateDto createDto, string tenantId)
     {
+      var prescription = _mapper.Map<Prescription>(createDto);
       prescription.TenantId = tenantId;
+      prescription.CreatedAt = DateTime.UtcNow;
+      prescription.UpdatedAt = DateTime.UtcNow;
+
       await _prescriptionRepository.AddPrescriptionAsync(prescription);
+
+      return _mapper.Map<PrescriptionResponseDto>(prescription);
+    }
+
+    public async Task<PrescriptionResponseDto> UpdatePrescriptionAsync(int id, PrescriptionUpdateDto updateDto, string tenantId)
+    {
+      var existingPrescription = await _prescriptionRepository.GetPrescriptionByIdAsync(id, tenantId)
+      ?? throw new KeyNotFoundException("Prescription not found");
+
+      _mapper.Map(updateDto, existingPrescription);
+      existingPrescription.UpdatedAt = DateTime.UtcNow;
+
+      await _prescriptionRepository.UpdatePrescriptionAsync(existingPrescription, tenantId);
+      return _mapper.Map<PrescriptionResponseDto>(existingPrescription);
     }
 
     public async Task<bool> DeletePrescriptionAsync(int id, string tenantId)
     {
-      var prescription = await _prescriptionRepository.GetPrescriptionByIdAsync(id, tenantId);
-      if (prescription == null)
+      try
+      {
+        await _prescriptionRepository.DeletePrescriptionAsync(id, tenantId);
+        return true;
+      }
+      catch
       {
         return false;
       }
-
-      await _prescriptionRepository.DeletePrescriptionAsync(id);
-      return true;
-    }
-
-    public async Task<bool> UpdatePrescriptionAsync(Prescription prescription, string tenantId)
-    {
-      var existingPrescription = await _prescriptionRepository.GetPrescriptionByIdAsync(prescription.Id, tenantId);
-      if (existingPrescription == null)
-      {
-        return false;
-      }
-
-      prescription.TenantId = tenantId;
-      await _prescriptionRepository.UpdatePrescriptionAsync(prescription);
-      return true;
     }
   }
 }
