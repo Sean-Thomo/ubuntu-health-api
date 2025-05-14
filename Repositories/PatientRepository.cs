@@ -23,7 +23,7 @@ namespace ubuntu_health_api.Repositories
     public async Task<PatientDto> GetPatientByIdAsync(int id, string tenantId)
     {
       var patient = await _dbContext.Patients.FirstOrDefaultAsync(
-        p => p.PatientId == id && p.TenantId == tenantId) ??
+        p => p.Id == id && p.TenantId == tenantId) ??
         throw new KeyNotFoundException(
           $"Patient with ID {id} and Tenant ID {tenantId} was not found.");
 

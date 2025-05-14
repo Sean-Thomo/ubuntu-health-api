@@ -44,7 +44,7 @@ namespace ubuntu_health_api.Services
 
     public async Task<bool> UpdatePrescriptionAsync(Prescription prescription, string tenantId)
     {
-      var existingPrescription = await _prescriptionRepository.GetPrescriptionByIdAsync(prescription.PrescriptionId, tenantId);
+      var existingPrescription = await _prescriptionRepository.GetPrescriptionByIdAsync(prescription.Id, tenantId);
       if (existingPrescription == null)
       {
         return false;

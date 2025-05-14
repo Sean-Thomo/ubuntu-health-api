@@ -16,7 +16,7 @@ namespace ubuntu_health_api.Data
     {
       base.OnModelCreating(modelBuilder);
 
-      // ------ Patient ------ 
+      // ------ Patient ------
       modelBuilder.Entity<Patient>(entity =>
       {
         entity.HasIndex(p => p.TenantId);
@@ -26,6 +26,7 @@ namespace ubuntu_health_api.Data
       // ------ Appointment ------
       modelBuilder.Entity<Appointment>(entity =>
       {
+        entity.HasKey(a => a.Id);
         entity.HasIndex(a => new { a.TenantId, a.PatientId });
         entity.HasOne(a => a.Patient)
               .WithMany(p => p.Appointments)
@@ -42,7 +43,7 @@ namespace ubuntu_health_api.Data
               .OnDelete(DeleteBehavior.Cascade);
       });
 
-      // ---- Prescription ----
+      // ------ Prescription ------
       modelBuilder.Entity<Prescription>(entity =>
       {
         entity.HasOne(p => p.Patient)
@@ -51,7 +52,7 @@ namespace ubuntu_health_api.Data
             .OnDelete(DeleteBehavior.Cascade);
       });
 
-      // ---- Invoice ----
+      // ------ Invoice ------
       modelBuilder.Entity<Invoice>(entity =>
       {
         entity.HasOne(i => i.Patient)

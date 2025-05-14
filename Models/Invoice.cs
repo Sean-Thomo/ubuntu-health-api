@@ -11,7 +11,7 @@ namespace ubuntu_health_api.Models
     public string? Status { get; set; }
     public string? Notes { get; set; }
     public Patient? Patient { get; set; }
-    public required string CreatedAt { get; set; }
-    public required string UpdatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
   }
 }

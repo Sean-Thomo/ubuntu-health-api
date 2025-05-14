@@ -24,7 +24,7 @@ namespace ubuntu_health_api.Repositories
     public async Task<ClinicalNoteDto> GetClinicalNoteByIdAsync(int id, string tenantId)
     {
       var clinicalNote = await _dbContext.ClinicalNotes.FirstOrDefaultAsync(
-        c => c.NoteId == id && c.TenantId == tenantId) ??
+        c => c.Id == id && c.TenantId == tenantId) ??
         throw new KeyNotFoundException(
           $"ClinicalNote with ID {id} and Tenant ID {tenantId} was not found.");
       return _mapper.Map<ClinicalNoteDto>(clinicalNote);

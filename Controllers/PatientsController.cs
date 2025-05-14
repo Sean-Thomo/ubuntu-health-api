@@ -51,7 +51,7 @@ namespace ubuntu_health_api.Controllers
       if (tenantId == null) return Forbid();
 
       await _patientService.AddPatientAsync(patient, tenantId);
-      return CreatedAtAction(nameof(GetPatientById), new { id = patient.PatientId }, patient);
+      return CreatedAtAction(nameof(GetPatientById), new { id = patient.Id }, patient);
     }
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
@@ -76,7 +76,7 @@ namespace ubuntu_health_api.Controllers
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      if (id != patient.PatientId)
+      if (id != patient.Id)
       {
         return BadRequest();
       }

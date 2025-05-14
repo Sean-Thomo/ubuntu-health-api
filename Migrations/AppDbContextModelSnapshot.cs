@@ -157,7 +157,7 @@ namespace ubuntu_health_api.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -210,13 +210,12 @@ namespace ubuntu_health_api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
@@ -237,7 +236,7 @@ namespace ubuntu_health_api.Migrations
 
             modelBuilder.Entity("ubuntu_health_api.Models.Appointment", b =>
                 {
-                    b.Property<int>("AppointmentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -251,11 +250,7 @@ namespace ubuntu_health_api.Migrations
                     b.Property<string>("AppointmentType")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CreatedAt")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DiagnosisCode")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Notes")
@@ -264,6 +259,9 @@ namespace ubuntu_health_api.Migrations
                     b.Property<string>("PatientFirstName")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("PatientLastName")
                         .IsRequired()
@@ -276,22 +274,21 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UpdatedAt")
-                        .IsRequired()
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("AppointmentId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("AppointmentDate");
+                    b.HasIndex("PatientId");
 
-                    b.HasIndex("AppointmentId");
+                    b.HasIndex("TenantId", "PatientId");
 
                     b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("ubuntu_health_api.Models.ClinicalNote", b =>
                 {
-                    b.Property<int>("NoteId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -307,7 +304,6 @@ namespace ubuntu_health_api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PatientId")
@@ -317,22 +313,26 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("NoteId");
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
 
                     b.ToTable("ClinicalNotes");
                 });
 
             modelBuilder.Entity("ubuntu_health_api.Models.Invoice", b =>
                 {
-                    b.Property<int>("InvoiceId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("AppointmentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("CreatedAt")
-                        .IsRequired()
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IssueDate")
@@ -355,11 +355,10 @@ namespace ubuntu_health_api.Migrations
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UpdatedAt")
-                        .IsRequired()
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("InvoiceId");
+                    b.HasKey("Id");
 
                     b.HasIndex("PatientId");
 
@@ -368,7 +367,7 @@ namespace ubuntu_health_api.Migrations
 
             modelBuilder.Entity("ubuntu_health_api.Models.Patient", b =>
                 {
-                    b.Property<int>("PatientId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -378,8 +377,7 @@ namespace ubuntu_health_api.Migrations
                     b.Property<string>("City")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CreatedAt")
-                        .IsRequired()
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CurrentMedication")
@@ -438,25 +436,25 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UpdatedAt")
-                        .IsRequired()
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PatientId");
+                    b.HasKey("Id");
 
                     b.HasIndex("IdNumber");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("ubuntu_health_api.Models.Prescription", b =>
                 {
-                    b.Property<int>("PrescriptionId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("CreatedAt")
-                        .IsRequired()
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Dosage")
@@ -492,11 +490,12 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UpdatedAt")
-                        .IsRequired()
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("PrescriptionId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Prescriptions");
                 });
@@ -582,6 +581,50 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ubuntu_health_api.Models.Appointment", b =>
+                {
+                    b.HasOne("ubuntu_health_api.Models.Patient", "Patient")
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("ubuntu_health_api.Models.ClinicalNote", b =>
+                {
+                    b.HasOne("ubuntu_health_api.Models.Patient", "Patient")
+                        .WithMany("ClinicalNotes")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("ubuntu_health_api.Models.Invoice", b =>
+                {
+                    b.HasOne("ubuntu_health_api.Models.Patient", "Patient")
+                        .WithMany("Invoices")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("ubuntu_health_api.Models.Prescription", b =>
+                {
+                    b.HasOne("ubuntu_health_api.Models.Patient", "Patient")
+                        .WithMany("Prescriptions")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("ubuntu_health_api.Models.PrescriptionMedication", b =>
                 {
                     b.HasOne("ubuntu_health_api.Models.Prescription", null)
@@ -589,6 +632,17 @@ namespace ubuntu_health_api.Migrations
                         .HasForeignKey("PrescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ubuntu_health_api.Models.Patient", b =>
+                {
+                    b.Navigation("Appointments");
+
+                    b.Navigation("ClinicalNotes");
+
+                    b.Navigation("Invoices");
+
+                    b.Navigation("Prescriptions");
                 });
 
             modelBuilder.Entity("ubuntu_health_api.Models.Prescription", b =>

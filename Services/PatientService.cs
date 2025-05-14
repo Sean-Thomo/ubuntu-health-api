@@ -46,7 +46,7 @@ namespace ubuntu_health_api.Services
 
     public async Task<bool> UpdatePatientAsync(Patient patient, string tenantId)
     {
-      var existingPatient = await _patientRepository.GetPatientByIdAsync(patient.PatientId, tenantId);
+      var existingPatient = await _patientRepository.GetPatientByIdAsync(patient.Id, tenantId);
       if (existingPatient == null)
       {
         return false;

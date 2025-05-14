@@ -1,68 +1,68 @@
 using ubuntu_health_api.Models;
 using ubuntu_health_api.Data;
 using Microsoft.EntityFrameworkCore;
-using ubuntu_health_api.Models.DTO;
 
 namespace ubuntu_health_api.Repositories
 {
   public class AppointmentRepository(AppDbContext context) : IAppointmentRepository
   {
-    private readonly AppDbContext _context = context;
+    private readonly AppDbContext _dbContext = context;
 
-    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync(string tenantId)
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync(string tenantId)
     {
-      return await _context.Appointments.Where(a => a.TenantId == tenantId).Select(a => new AppointmentDto
-      {
-        AppointmentId = a.AppointmentId,
-        PatientFirstName = a.PatientFirstName,
-        PatientLastName = a.PatientLastName,
-        AppointmentDate = a.AppointmentDate,
-        AppointmentTime = a.AppointmentTime,
-        AppointmentType = a.AppointmentType,
-        Status = a.Status,
-        Notes = a.Notes,
-      }).ToListAsync();
+      return await _dbContext.Appointments
+          .Where(a => a.TenantId == tenantId)
+          .ToListAsync();
     }
 
-    public async Task<AppointmentDto> GetAppointmentByIdAsync(int id, string tenantId)
+    public async Task<Appointment> GetAppointmentByIdAsync(int id, string tenantId)
     {
-      var appointment = await _context.Appointments.FirstOrDefaultAsync(
-        a => a.AppointmentId == id && a.TenantId == tenantId) ??
-        throw new KeyNotFoundException(
-          $"Appointment with ID {id} and Tenant ID {tenantId} was not found.");
-      return new AppointmentDto
+      var appointment = await _dbContext.Appointments
+          .FirstOrDefaultAsync(a => a.Id == id && a.TenantId == tenantId);
+
+      if (appointment == null)
       {
-        AppointmentId = appointment.AppointmentId,
-        PatientFirstName = appointment.PatientFirstName,
-        PatientLastName = appointment.PatientLastName,
-        AppointmentDate = appointment.AppointmentDate,
-        AppointmentTime = appointment.AppointmentTime,
-        AppointmentType = appointment.AppointmentType,
-        Status = appointment.Status,
-        Notes = appointment.Notes,
-      };
+        throw new InvalidOperationException("Appointment not found or tenant mismatch");
+      }
+
+      return appointment;
     }
 
     public async Task AddAppointmentAsync(Appointment appointment)
     {
-      await _context.Appointments.AddAsync(appointment);
-      await _context.SaveChangesAsync();
+      await _dbContext.Appointments.AddAsync(appointment);
+      await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAppointmentAsync(int id)
+    public async Task DeleteAppointmentAsync(int id, string tenantId)
     {
-      var appointment = await _context.Appointments.FindAsync(id);
+      var appointment = await _dbContext.Appointments
+          .FirstOrDefaultAsync(a => a.Id == id && a.TenantId == tenantId);
+
       if (appointment != null)
       {
-        _context.Appointments.Remove(appointment);
-        await _context.SaveChangesAsync();
+        _dbContext.Appointments.Remove(appointment);
+        await _dbContext.SaveChangesAsync();
       }
     }
 
-    public async Task UpdateAppointmentAsync(Appointment appointment)
+    public async Task UpdateAppointmentAsync(Appointment appointment, string tenantId)
     {
-      _context.Appointments.Update(appointment);
-      await _context.SaveChangesAsync();
+      var existing = await _dbContext.Appointments
+          .FirstOrDefaultAsync(a => a.Id == appointment.Id && a.TenantId == tenantId)
+          ?? throw new InvalidOperationException("Appointment not found or tenant mismatch");
+
+      existing.PatientId = appointment.PatientId;
+      existing.PatientFirstName = appointment.PatientFirstName;
+      existing.PatientLastName = appointment.PatientLastName;
+      existing.AppointmentDate = appointment.AppointmentDate;
+      existing.AppointmentTime = appointment.AppointmentTime;
+      existing.AppointmentType = appointment.AppointmentType;
+      existing.Status = appointment.Status;
+      existing.Notes = appointment.Notes;
+      existing.UpdatedAt = DateTime.UtcNow;
+
+      await _dbContext.SaveChangesAsync();
     }
   }
 }

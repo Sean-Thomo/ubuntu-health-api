@@ -8,9 +8,13 @@ namespace ubuntu_health_api.Helpers
   {
     public AutoMapperProfile()
     {
+      // Request DTO -> Model
+      CreateMap<AppointmentCreateDto, Appointment>();
+      CreateMap<AppointmentUpdateDto, Appointment>();
+      // Model -> Response DTO
       CreateMap<Patient, PatientDto>();
       CreateMap<Invoice, InvoiceDto>();
-      CreateMap<Appointment, AppointmentDto>();
+      CreateMap<Appointment, AppointmentResponseDto>();
       CreateMap<ClinicalNote, ClinicalNoteDto>();
       CreateMap<Prescription, PrescriptionDto>();
     }

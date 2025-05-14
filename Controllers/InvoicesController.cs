@@ -53,7 +53,7 @@ namespace ubuntu_health_api.Controllers
       }
 
       await _invoiceService.AddInvoiceAsync(invoice, tenantId);
-      return CreatedAtAction(nameof(GetInvoiceById), new { id = invoice.InvoiceId }, invoice);
+      return CreatedAtAction(nameof(GetInvoiceById), new { id = invoice.Id }, invoice);
     }
 
     [HttpPut("{id}")]

@@ -44,7 +44,7 @@ namespace ubuntu_health_api.Services
     }
     public async Task<bool> UpdateInvoiceAsync(Invoice invoice, string tenantId)
     {
-      var existingInvoice = await _invoiceRepository.GetInvoiceByIdAsync(invoice.InvoiceId, tenantId);
+      var existingInvoice = await _invoiceRepository.GetInvoiceByIdAsync(invoice.Id, tenantId);
       if (existingInvoice == null)
       {
         return false;

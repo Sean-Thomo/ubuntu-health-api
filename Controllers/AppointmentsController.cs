@@ -1,7 +1,9 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ubuntu_health_api.Helpers;
 using ubuntu_health_api.Models;
+using ubuntu_health_api.Models.DTO;
 using ubuntu_health_api.Services;
 
 namespace ubuntu_health_api.Controllers
@@ -9,11 +11,11 @@ namespace ubuntu_health_api.Controllers
   [Authorize]
   [ApiController]
   [Route("api/[controller]")]
-  public class AppointmentsController(IAppointmentService appointmentService, IHttpContextAccessor httpContextAccessor) : ControllerBase
+  public class AppointmentsController(IAppointmentService appointmentService, IHttpContextAccessor httpContextAccessor, IMapper mapper) : ControllerBase
   {
     private readonly IAppointmentService _appointmentService = appointmentService;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
-
+    private readonly IMapper _mapper = mapper;
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpGet]
@@ -24,7 +26,7 @@ namespace ubuntu_health_api.Controllers
       if (tenantId == null) return Forbid();
 
       var appointments = await _appointmentService.GetAllAppointmentsAsync(tenantId);
-      return Ok(appointments);
+      return Ok(_mapper.Map<IEnumerable<AppointmentResponseDto>>(appointments));
     }
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
@@ -40,24 +42,25 @@ namespace ubuntu_health_api.Controllers
       {
         return NotFound();
       }
-      return Ok(appointment);
+      return Ok(_mapper.Map<AppointmentResponseDto>(appointment));
     }
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpPost]
-    public async Task<ActionResult> AddAppointment([FromBody] Appointment appointment)
+    public async Task<ActionResult> AddAppointment([FromBody] AppointmentCreateDto request)
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      if (appointment == null)
-      {
-        return BadRequest("Appointment data is null");
-      }
+      var appointment = _mapper.Map<Appointment>(request);
+      appointment.TenantId = tenantId;
+      appointment.CreatedAt = DateTime.UtcNow;
+      appointment.UpdatedAt = DateTime.UtcNow;
 
-      await _appointmentService.AddAppointmentAsync(appointment, tenantId);
-      return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.AppointmentId }, appointment);
+      await _appointmentService.AddAppointmentAsync(appointment);
+      var responseDto = _mapper.Map<AppointmentResponseDto>(appointment);
+      return CreatedAtAction(nameof(GetAppointmentById), new { id = responseDto.Id }, responseDto);
     }
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
@@ -79,16 +82,21 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateAppointment([FromBody] Appointment appointment)
+    public async Task<ActionResult> UpdateAppointment(int id, [FromBody] AppointmentUpdateDto requestDto)
     {
-      if (_httpContextAccessor.HttpContext == null) return Forbid();
-      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
+      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext!);
       if (tenantId == null) return Forbid();
 
-      var result = await _appointmentService.UpdateAppointmentAsync(appointment, tenantId);
-      if (!result) return NotFound();
+      var existingAppointment = await _appointmentService.GetAppointmentByIdAsync(id, tenantId);
 
-      return NoContent();
+      if (existingAppointment == null) return NotFound();
+
+      _mapper.Map(requestDto, existingAppointment);
+      existingAppointment.UpdatedAt = DateTime.UtcNow;
+
+      await _appointmentService.UpdateAppointmentAsync(existingAppointment, tenantId);
+      return Ok(_mapper.Map<AppointmentResponseDto>(existingAppointment));
     }
+
   }
 }

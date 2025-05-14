@@ -5,10 +5,10 @@ namespace ubuntu_health_api.Services
 {
   public interface IAppointmentService
   {
-    Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync(string tenantId);
-    Task<AppointmentDto> GetAppointmentByIdAsync(int id, string tenantId);
-    Task AddAppointmentAsync(Appointment appointment, string tenantId);
+    Task<IEnumerable<AppointmentResponseDto>> GetAllAppointmentsAsync(string tenantId);
+    Task<AppointmentResponseDto> GetAppointmentByIdAsync(int id, string tenantId);
+    Task AddAppointmentAsync(Appointment appointment);
+    Task<bool> UpdateAppointmentAsync(AppointmentUpdateDto appointment, string tenantId);
     Task<bool> DeleteAppointmentAsync(int id, string tenantId);
-    Task<bool> UpdateAppointmentAsync(Appointment appointment, string tenantId);
   }
 }

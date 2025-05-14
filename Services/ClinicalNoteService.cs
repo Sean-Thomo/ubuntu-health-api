@@ -43,7 +43,7 @@ namespace ubuntu_health_api.Services
 
     public async Task<bool> UpdateClinicalNoteAsync(ClinicalNote clinicalNote, string tenantId)
     {
-      var existingClinicalNote = await _clinicalNoteRepository.GetClinicalNoteByIdAsync(clinicalNote.NoteId, tenantId);
+      var existingClinicalNote = await _clinicalNoteRepository.GetClinicalNoteByIdAsync(clinicalNote.Id, tenantId);
       if (existingClinicalNote == null)
       {
         return false;

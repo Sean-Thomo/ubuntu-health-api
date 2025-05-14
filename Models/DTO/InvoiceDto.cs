@@ -2,7 +2,7 @@ namespace ubuntu_health_api.Models.DTO
 {
   public class InvoiceDto
   {
-    public int InvoiceId { get; set; }
+    public int Id { get; set; }
     public int PatientId { get; set; }
     public int AppointmentId { get; set; }
     public required string IssueDate { get; set; }

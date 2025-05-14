@@ -2,7 +2,7 @@ namespace ubuntu_health_api.Models.DTO
 {
   public class ClinicalNoteDto
   {
-    public int NoteId { get; set; }
+    public int Id { get; set; }
     public int PatientId { get; set; }
     public required string DoctorId { get; set; }
     public DateTime CreatedAt { get; set; }

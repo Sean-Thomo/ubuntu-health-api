@@ -55,7 +55,7 @@ namespace ubuntu_health_api.Controllers
       }
 
       await _prescriptionService.AddPrescriptionAsync(prescription, tenantId);
-      return CreatedAtAction(nameof(GetPrescriptionById), new { id = prescription.PrescriptionId }, prescription);
+      return CreatedAtAction(nameof(GetPrescriptionById), new { id = prescription.Id }, prescription);
     }
 
     [Authorize(Roles = "doctor")]
@@ -84,7 +84,7 @@ namespace ubuntu_health_api.Controllers
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      if (id != prescription.PrescriptionId)
+      if (id != prescription.Id)
       {
         return BadRequest();
       }

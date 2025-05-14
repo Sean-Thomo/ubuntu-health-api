@@ -51,7 +51,7 @@ namespace ubuntu_health_api.Controllers
       if (tenantId == null) return Forbid();
 
       await _clinicalNoteService.AddClinicalNoteAsync(clinicalNote, tenantId);
-      return CreatedAtAction(nameof(GetClinicalNoteById), new { id = clinicalNote.NoteId }, clinicalNote);
+      return CreatedAtAction(nameof(GetClinicalNoteById), new { id = clinicalNote.Id }, clinicalNote);
     }
 
     [Authorize(Roles = "admin,doctor,nurse")]
@@ -76,7 +76,7 @@ namespace ubuntu_health_api.Controllers
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      if (id != clinicalNote.NoteId) return BadRequest();
+      if (id != clinicalNote.Id) return BadRequest();
 
       var existingClinicalNote = await _clinicalNoteService.GetClinicalNoteByIdAsync(id, tenantId);
       if (existingClinicalNote == null) return NotFound();

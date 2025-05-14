@@ -28,7 +28,7 @@ namespace ubuntu_health_api.Models
     public List<ClinicalNote> ClinicalNotes { get; set; } = [];
     public List<Prescription> Prescriptions { get; set; } = [];
     public List<Invoice> Invoices { get; set; } = [];
-    public required string CreatedAt { get; set; }
-    public required string UpdatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
   }
 }
