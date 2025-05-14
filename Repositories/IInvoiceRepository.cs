@@ -5,10 +5,10 @@ namespace ubuntu_health_api.Repositories
 {
   public interface IInvoiceRepository
   {
-    Task<IEnumerable<InvoiceDto>> GetAllInvoicesAsync(string tenantId);
-    Task<InvoiceDto> GetInvoiceByIdAsync(int id, string tenantId);
+    Task<IEnumerable<Invoice>> GetAllInvoicesAsync(string tenantId);
+    Task<Invoice> GetInvoiceByIdAsync(int id, string tenantId);
     Task AddInvoiceAsync(Invoice invoice);
-    Task DeleteInvoiceAsync(int id);
-    Task UpdateInvoiceAsync(Invoice invoice);
+    Task UpdateInvoiceAsync(Invoice invoice, string tenantId);
+    Task DeleteInvoiceAsync(int id, string tenantId);
   }
 }

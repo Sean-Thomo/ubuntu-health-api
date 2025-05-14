@@ -5,10 +5,10 @@ namespace ubuntu_health_api.Services
 {
   public interface IInvoiceService
   {
-    Task<IEnumerable<InvoiceDto>> GetAllInvoicesAsync(string tenantId);
-    Task<InvoiceDto> GetInvoiceByIdAsync(int id, string tenantId);
-    Task AddInvoiceAsync(Invoice invoice, string tenantId);
+    Task<IEnumerable<InvoiceResponseDto>> GetAllInvoicesAsync(string tenantId);
+    Task<InvoiceResponseDto> GetInvoiceByIdAsync(int id, string tenantId);
+    Task<InvoiceResponseDto> AddInvoiceAsync(InvoiceCreateDto createDto, string tenantId);
+    Task<InvoiceResponseDto> UpdateInvoiceAsync(int id, InvoiceUpdateDto updateDto, string tenantId);
     Task<bool> DeleteInvoiceAsync(int id, string tenantId);
-    Task<bool> UpdateInvoiceAsync(Invoice invoice, string tenantId);
   }
 }

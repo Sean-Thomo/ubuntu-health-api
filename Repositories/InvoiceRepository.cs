@@ -7,10 +7,24 @@ using ubuntu_health_api.Models.DTO;
 
 namespace ubuntu_health_api.Repositories
 {
-  public class InvoiceRepository(AppDbContext dbContext, IMapper mapper) : IInvoiceRepository
+  public class InvoiceRepository(AppDbContext dbContext) : IInvoiceRepository
   {
     private readonly AppDbContext _dbContext = dbContext;
-    private readonly IMapper _mapper = mapper;
+
+    public async Task<IEnumerable<Invoice>> GetAllInvoicesAsync(string tenantId)
+    {
+      return await _dbContext.Invoices
+      .Where(i => i.TenantId == tenantId)
+      .ToListAsync();
+    }
+
+    public async Task<Invoice> GetInvoiceByIdAsync(int id, string tenantId)
+    {
+      var invoice = await _dbContext.Invoices
+        .FirstOrDefaultAsync(i => i.AppointmentId == id && i.TenantId == tenantId)
+        ?? throw new KeyNotFoundException($"Appointment with ID {id} was not found.");
+      return invoice;
+    }
 
     public async Task AddInvoiceAsync(Invoice invoice)
     {
@@ -18,7 +32,21 @@ namespace ubuntu_health_api.Repositories
       await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteInvoiceAsync(int id)
+    public async Task UpdateInvoiceAsync(Invoice invoice, string tenantId)
+    {
+      var existing = await _dbContext.Invoices
+      .FirstOrDefaultAsync(e => e.Id == invoice.Id && e.TenantId == tenantId)
+      ?? throw new InvalidOperationException("Invoice not found");
+
+      existing.TotalAmount = invoice.TotalAmount;
+      existing.Status = invoice.Status;
+      existing.Notes = invoice.Notes;
+      existing.UpdatedAt = DateTime.UtcNow;
+
+      await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteInvoiceAsync(int id, string tenantId)
     {
       var invoice = await _dbContext.Invoices.FindAsync(id);
       if (invoice != null)
@@ -26,32 +54,6 @@ namespace ubuntu_health_api.Repositories
         _dbContext.Invoices.Remove(invoice);
         await _dbContext.SaveChangesAsync();
       }
-    }
-
-    public async Task<IEnumerable<InvoiceDto>> GetAllInvoicesAsync(string tenantId)
-    {
-      return await _dbContext.Invoices
-      .Where(i => i.TenantId == tenantId)
-      .ProjectTo<InvoiceDto>(_mapper.ConfigurationProvider)
-      .ToListAsync();
-    }
-
-    public async Task<InvoiceDto> GetInvoiceByIdAsync(int id, string tenantId)
-    {
-      var invoice = await _dbContext.Invoices.FirstOrDefaultAsync(
-        i => i.AppointmentId == id && i.TenantId == tenantId) ??
-        throw new KeyNotFoundException(
-          $"Appointment with ID {id} was not found."
-        );
-
-      return _mapper.Map<InvoiceDto>(invoice);
-
-    }
-
-    public async Task UpdateInvoiceAsync(Invoice invoice)
-    {
-      _dbContext.Invoices.Update(invoice);
-      await _dbContext.SaveChangesAsync();
     }
   }
 }

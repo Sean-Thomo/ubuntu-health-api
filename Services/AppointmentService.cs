@@ -12,14 +12,15 @@ namespace ubuntu_health_api.Services
 
     public async Task<IEnumerable<AppointmentResponseDto>> GetAllAppointmentsAsync(string tenantId)
     {
-      var appointments = await _appointmentRepository.GetAllAppointmentsAsync(tenantId);
+      var appointments = await _appointmentRepository.GetAllAppointmentsAsync(tenantId) ??
+      throw new KeyNotFoundException("No Appointments found");
       return _mapper.Map<IEnumerable<AppointmentResponseDto>>(appointments);
     }
 
     public async Task<AppointmentResponseDto> GetAppointmentByIdAsync(int id, string tenantId)
     {
       var appointment = await _appointmentRepository.GetAppointmentByIdAsync(id, tenantId)
-          ?? throw new KeyNotFoundException($"Appointment with ID {id} not found for tenant {tenantId}");
+          ?? throw new KeyNotFoundException($"Appoinment not found");
 
       return _mapper.Map<AppointmentResponseDto>(appointment);
     }

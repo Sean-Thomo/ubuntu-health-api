@@ -81,15 +81,10 @@ namespace ubuntu_health_api.Controllers
       if (tenantId == null) return Forbid();
 
       var appointment = await _appointmentService.GetAppointmentByIdAsync(id, tenantId);
-      if (appointment == null)
-      {
-        return NotFound();
-      }
+      if (appointment == null) return NotFound();
+
       await _appointmentService.DeleteAppointmentAsync(id, tenantId);
       return NoContent();
     }
-
-
-
   }
 }
