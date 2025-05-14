@@ -47,14 +47,14 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpPost]
-    public async Task<ActionResult> AddAppointment([FromBody] AppointmentCreateDto request)
+    public async Task<ActionResult> AddAppointment([FromBody] AppointmentCreateDto appointment)
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      await _appointmentService.AddAppointmentAsync(request, tenantId);
-      var responseDto = _mapper.Map<AppointmentResponseDto>(request);
+      await _appointmentService.AddAppointmentAsync(appointment, tenantId);
+      var responseDto = _mapper.Map<AppointmentResponseDto>(appointment);
       return CreatedAtAction(nameof(GetAppointmentById), new { id = responseDto.Id }, responseDto);
     }
 
@@ -77,12 +77,13 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateAppointment(int id, [FromBody] AppointmentUpdateDto requestDto)
+    public async Task<ActionResult> UpdateAppointment(int id, [FromBody] AppointmentUpdateDto appointment)
     {
-      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext!);
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
+      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      var updatedAppointment = await _appointmentService.UpdateAppointmentAsync(id, requestDto, tenantId);
+      var updatedAppointment = await _appointmentService.UpdateAppointmentAsync(id, appointment, tenantId);
       if (updatedAppointment == null) return NotFound();
 
       return Ok(_mapper.Map<AppointmentResponseDto>(updatedAppointment));

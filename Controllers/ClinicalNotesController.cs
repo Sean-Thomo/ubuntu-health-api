@@ -4,6 +4,7 @@ using ubuntu_health_api.Services;
 using Microsoft.AspNetCore.Authorization;
 using ubuntu_health_api.Helpers;
 using ubuntu_health_api.Models.DTO;
+using AutoMapper;
 
 namespace ubuntu_health_api.Controllers
 {
@@ -11,10 +12,11 @@ namespace ubuntu_health_api.Controllers
   [ApiController]
   [Route("api/[controller]")]
   public class ClinicalNotesController(IClinicalNoteService clinicalNoteService
-  , IHttpContextAccessor httpContextAccessor) : ControllerBase
+  , IHttpContextAccessor httpContextAccessor, IMapper mapper) : ControllerBase
   {
     private readonly IClinicalNoteService _clinicalNoteService = clinicalNoteService;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly IMapper _mapper = mapper;
 
     [Authorize(Roles = "admin,doctor,nurse")]
     [HttpGet]
@@ -44,14 +46,15 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse")]
     [HttpPost]
-    public async Task<ActionResult> AddClinicalNote([FromBody] ClinicalNote clinicalNote)
+    public async Task<ActionResult> AddClinicalNote([FromBody] ClinicalNoteCreateDto clinicalNote)
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
       await _clinicalNoteService.AddClinicalNoteAsync(clinicalNote, tenantId);
-      return CreatedAtAction(nameof(GetClinicalNoteById), new { id = clinicalNote.Id }, clinicalNote);
+      var responseDto = _mapper.Map<ClinicalNoteResponseDto>(clinicalNote);
+      return CreatedAtAction(nameof(GetClinicalNoteById), new { id = responseDto.Id }, clinicalNote);
     }
 
     [Authorize(Roles = "admin,doctor,nurse")]
@@ -70,19 +73,14 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateClinicalNote(int id, [FromBody] ClinicalNote clinicalNote)
+    public async Task<ActionResult> UpdateClinicalNote(int id, [FromBody] ClinicalNoteUpdateDto clinicalNote)
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      if (id != clinicalNote.Id) return BadRequest();
-
-      var existingClinicalNote = await _clinicalNoteService.GetClinicalNoteByIdAsync(id, tenantId);
+      var existingClinicalNote = await _clinicalNoteService.UpdateClinicalNoteAsync(id, clinicalNote, tenantId);
       if (existingClinicalNote == null) return NotFound();
-
-      var result = await _clinicalNoteService.UpdateClinicalNoteAsync(clinicalNote, tenantId);
-      if (!result) return NotFound();
 
       return NoContent();
     }
