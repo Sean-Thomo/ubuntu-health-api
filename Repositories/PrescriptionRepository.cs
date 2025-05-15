@@ -39,7 +39,6 @@ namespace ubuntu_health_api.Repositories
       .FirstOrDefaultAsync(e => e.Id == prescription.Id && e.TenantId == tenantId)
       ?? throw new InvalidOperationException("Prescription not fond or tenant mismatch");
 
-      existing.Dosage = prescription.Dosage;
       existing.Frequency = prescription.Frequency;
       existing.Refills = prescription.Refills;
       existing.Status = prescription.Status;

@@ -27,10 +27,9 @@ namespace ubuntu_health_api.Data
       modelBuilder.Entity<Appointment>(entity =>
       {
         entity.HasKey(a => a.Id);
-        entity.HasIndex(a => new { a.TenantId, a.PatientId });
+        entity.HasIndex(a => new { a.TenantId });
         entity.HasOne(a => a.Patient)
               .WithMany(p => p.Appointments)
-              .HasForeignKey(a => a.PatientId)
               .OnDelete(DeleteBehavior.Cascade);
       });
 

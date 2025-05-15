@@ -34,7 +34,6 @@ namespace ubuntu_health_api.Repositories
           .FirstOrDefaultAsync(a => a.Id == appointment.Id && a.TenantId == tenantId)
           ?? throw new InvalidOperationException("Appointment not found or tenant mismatch");
 
-      existing.PatientId = appointment.PatientId;
       existing.PatientFirstName = appointment.PatientFirstName;
       existing.PatientLastName = appointment.PatientLastName;
       existing.AppointmentDate = appointment.AppointmentDate;

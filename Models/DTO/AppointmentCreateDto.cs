@@ -2,7 +2,6 @@ namespace ubuntu_health_api.Models.DTO
 {
   public class AppointmentCreateDto
   {
-    public required int PatientId { get; set; }
     public required string PatientFirstName { get; set; }
     public required string PatientLastName { get; set; }
     public required string AppointmentDate { get; set; }

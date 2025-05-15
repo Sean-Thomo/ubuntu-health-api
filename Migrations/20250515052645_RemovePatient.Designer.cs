@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ubuntu_health_api.Data;
 
@@ -10,9 +11,11 @@ using ubuntu_health_api.Data;
 namespace ubuntu_health_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250515052645_RemovePatient")]
+    partial class RemovePatient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -456,6 +459,10 @@ namespace ubuntu_health_api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Dosage")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("EndDate")
                         .HasColumnType("TEXT");
 
@@ -505,7 +512,7 @@ namespace ubuntu_health_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Instructionss")
+                    b.Property<string>("Frequency")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -514,6 +521,9 @@ namespace ubuntu_health_api.Migrations
 
                     b.Property<int>("PrescriptionId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

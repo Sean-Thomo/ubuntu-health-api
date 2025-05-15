@@ -6,7 +6,6 @@ namespace ubuntu_health_api.Models.DTO
     public string? TenantId { get; set; }
     public int PatientId { get; set; }
     public int PractitionerId { get; set; }
-    public required string Dosage { get; set; }
     public required string IssueDate { get; set; }
     public required string? EndDate { get; set; }
     public string? Frequency { get; set; }
