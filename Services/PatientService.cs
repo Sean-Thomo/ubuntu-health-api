@@ -10,24 +10,24 @@ namespace ubuntu_health_api.Services
     private readonly IPatientRepository _patientRepository = patientRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync(string tenantId)
+    public async Task<IEnumerable<PatientResponseDto>> GetAllPatientsAsync(string tenantId)
     {
       var patients = await _patientRepository.GetAllPatientsAsync(tenantId);
       if (patients == null || !patients.Any())
       {
         throw new KeyNotFoundException("No patients found.");
       }
-      return _mapper.Map<IEnumerable<PatientDto>>(patients);
+      return _mapper.Map<IEnumerable<PatientResponseDto>>(patients);
     }
 
-    public async Task<PatientDto> GetPatientByIdAsync(int id, string tenantId)
+    public async Task<PatientResponseDto> GetPatientByIdAsync(int id, string tenantId)
     {
       var patient = await _patientRepository.GetPatientByIdAsync(id, tenantId) ??
       throw new KeyNotFoundException("Patient not found.");
-      return _mapper.Map<PatientDto>(patient);
+      return _mapper.Map<PatientResponseDto>(patient);
     }
 
-    public async Task<PatientDto> AddPatientAsync(PatientDto createDto, string tenantId)
+    public async Task<PatientResponseDto> AddPatientAsync(PatientDto createDto, string tenantId)
     {
       var patient = _mapper.Map<Patient>(createDto);
       patient.TenantId = tenantId;
@@ -36,17 +36,18 @@ namespace ubuntu_health_api.Services
 
       await _patientRepository.AddPatientAsync(patient);
 
-      return _mapper.Map<PatientDto>(patient);
+      return _mapper.Map<PatientResponseDto>(patient);
     }
 
-    public async Task<PatientDto> UpdatePatientAsync(int id, PatientDto updateDto, string tenantId)
+    public async Task<PatientResponseDto> UpdatePatientAsync(int id, PatientDto updateDto, string tenantId)
     {
+
       var existingPatient = await _patientRepository.GetPatientByIdAsync(id, tenantId)
         ?? throw new KeyNotFoundException("Patient not found");
 
       _mapper.Map(updateDto, existingPatient);
       await _patientRepository.UpdatePatientAsync(existingPatient, tenantId);
-      return _mapper.Map<PatientDto>(existingPatient);
+      return _mapper.Map<PatientResponseDto>(existingPatient);
     }
 
     public async Task<bool> DeletePatientAsync(int id, string tenantId)

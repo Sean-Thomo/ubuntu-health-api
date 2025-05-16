@@ -1,6 +1,7 @@
 using ubuntu_health_api.Data;
 using ubuntu_health_api.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Serialization;
 
 namespace ubuntu_health_api.Repositories
 {
@@ -33,8 +34,8 @@ namespace ubuntu_health_api.Repositories
     public async Task UpdatePatientAsync(Patient patient, string tenantId)
     {
       var existing = await _dbContext.Patients
-        .FirstOrDefaultAsync(e => e.Id == patient.Id && patient.TenantId == tenantId)
-        ?? throw new InvalidOperationException("Patient not found or tenant mismatch");
+          .FirstOrDefaultAsync(e => e.Id == patient.Id && e.TenantId == tenantId)
+          ?? throw new InvalidOperationException($"Patient not found or tenant mismatch (Patient Tenant: {tenantId}, Request Tenant: {tenantId})");
 
       existing.FirstName = patient.FirstName;
       existing.LastName = patient.LastName;

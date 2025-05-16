@@ -54,7 +54,7 @@ namespace ubuntu_health_api.Controllers
       if (tenantId == null) return Forbid();
 
       await _patientService.AddPatientAsync(patient, tenantId);
-      var responseDto = _mapper.Map<PatientDto>(patient);
+      var responseDto = _mapper.Map<PatientResponseDto>(patient);
       return CreatedAtAction(nameof(GetPatientById), new { id = responseDto.Id }, patient);
     }
 
@@ -69,7 +69,7 @@ namespace ubuntu_health_api.Controllers
       var updatedPatient = await _patientService.UpdatePatientAsync(id, patient, tenantId);
       if (updatedPatient == null) return NotFound();
 
-      return Ok(_mapper.Map<PatientDto>(updatedPatient));
+      return Ok(updatedPatient);
     }
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
