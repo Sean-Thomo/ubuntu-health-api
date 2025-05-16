@@ -8,7 +8,7 @@ namespace ubuntu_health_api.Models
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? IdNumber { get; set; }
-    public required string Gender { get; set; }
+    public required string Sex { get; set; }
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public string? Street { get; set; }
