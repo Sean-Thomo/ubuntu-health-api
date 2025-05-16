@@ -27,10 +27,26 @@ namespace ubuntu_health_api.Services
       return _mapper.Map<PatientDto>(patient);
     }
 
-    public async Task AddPatientAsync(Patient patient, string tenantId)
+    public async Task<PatientDto> AddPatientAsync(PatientDto createDto, string tenantId)
     {
+      var patient = _mapper.Map<Patient>(createDto);
       patient.TenantId = tenantId;
+      patient.CreatedAt = DateTime.UtcNow;
+      patient.UpdatedAt = DateTime.UtcNow;
+
       await _patientRepository.AddPatientAsync(patient);
+
+      return _mapper.Map<PatientDto>(patient);
+    }
+
+    public async Task<PatientDto> UpdatePatientAsync(int id, PatientDto updateDto, string tenantId)
+    {
+      var existingPatient = await _patientRepository.GetPatientByIdAsync(id, tenantId)
+        ?? throw new KeyNotFoundException("Patient not found");
+
+      _mapper.Map(updateDto, existingPatient);
+      await _patientRepository.UpdatePatientAsync(existingPatient, tenantId);
+      return _mapper.Map<PatientDto>(existingPatient);
     }
 
     public async Task<bool> DeletePatientAsync(int id, string tenantId)
@@ -40,20 +56,7 @@ namespace ubuntu_health_api.Services
       {
         return false;
       }
-      await _patientRepository.DeletePatientAsync(id);
-      return true;
-    }
-
-    public async Task<bool> UpdatePatientAsync(Patient patient, string tenantId)
-    {
-      var existingPatient = await _patientRepository.GetPatientByIdAsync(patient.Id, tenantId);
-      if (existingPatient == null)
-      {
-        return false;
-      }
-
-      patient.TenantId = tenantId;
-      await _patientRepository.UpdatePatientAsync(patient);
+      await _patientRepository.DeletePatientAsync(id, tenantId);
       return true;
     }
   }

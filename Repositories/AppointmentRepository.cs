@@ -41,7 +41,6 @@ namespace ubuntu_health_api.Repositories
       existing.AppointmentType = appointment.AppointmentType;
       existing.Status = appointment.Status;
       existing.Notes = appointment.Notes;
-      existing.UpdatedAt = DateTime.UtcNow;
 
       await _dbContext.SaveChangesAsync();
     }

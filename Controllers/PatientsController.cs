@@ -4,6 +4,7 @@ using ubuntu_health_api.Services;
 using Microsoft.AspNetCore.Authorization;
 using ubuntu_health_api.Helpers;
 using ubuntu_health_api.Models.DTO;
+using AutoMapper;
 
 namespace ubuntu_health_api.Controllers
 {
@@ -11,10 +12,12 @@ namespace ubuntu_health_api.Controllers
   [ApiController]
   [Route("api/[controller]")]
   public class PatientsController(IPatientService patientService,
-  IHttpContextAccessor httpContextAccessor) : ControllerBase
+  IHttpContextAccessor httpContextAccessor,
+  IMapper mapper) : ControllerBase
   {
     private readonly IPatientService _patientService = patientService;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly IMapper _mapper = mapper;
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpGet]
@@ -44,14 +47,29 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpPost]
-    public async Task<ActionResult> AddPatient([FromBody] Patient patient)
+    public async Task<ActionResult> AddPatient([FromBody] PatientDto patient)
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
       await _patientService.AddPatientAsync(patient, tenantId);
-      return CreatedAtAction(nameof(GetPatientById), new { id = patient.Id }, patient);
+      var responseDto = _mapper.Map<PatientDto>(patient);
+      return CreatedAtAction(nameof(GetPatientById), new { id = responseDto.Id }, patient);
+    }
+
+    [Authorize(Roles = "admin,doctor,nurse,receptionist")]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdatePatient(int id, [FromBody] PatientDto patient)
+    {
+      if (_httpContextAccessor.HttpContext == null) return Forbid();
+      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
+      if (tenantId == null) return Forbid();
+
+      var updatedPatient = await _patientService.UpdatePatientAsync(id, patient, tenantId);
+      if (updatedPatient == null) return NotFound();
+
+      return Ok(_mapper.Map<PatientDto>(updatedPatient));
     }
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
@@ -63,31 +81,6 @@ namespace ubuntu_health_api.Controllers
       if (tenantId == null) return Forbid();
 
       var result = await _patientService.DeletePatientAsync(id, tenantId);
-      if (!result) return NotFound();
-
-      return NoContent();
-    }
-
-    [Authorize(Roles = "admin,doctor,nurse,receptionist")]
-    [HttpPut("{id}")]
-    public async Task<ActionResult> UpdatePatient(int id, [FromBody] Patient patient)
-    {
-      if (_httpContextAccessor.HttpContext == null) return Forbid();
-      var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
-      if (tenantId == null) return Forbid();
-
-      if (id != patient.Id)
-      {
-        return BadRequest();
-      }
-
-      var existingPatient = await _patientService.GetPatientByIdAsync(id, tenantId);
-      if (existingPatient == null)
-      {
-        return NotFound();
-      }
-
-      var result = await _patientService.UpdatePatientAsync(patient, tenantId);
       if (!result) return NotFound();
 
       return NoContent();
