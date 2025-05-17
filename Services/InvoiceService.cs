@@ -28,8 +28,6 @@ namespace ubuntu_health_api.Services
     {
       var invoice = _mapper.Map<Invoice>(createDto);
       invoice.TenantId = tenantId;
-      invoice.CreatedAt = DateTime.UtcNow;
-      invoice.CreatedAt = DateTime.UtcNow;
 
       await _invoiceRepository.AddInvoiceAsync(invoice);
 
@@ -42,7 +40,6 @@ namespace ubuntu_health_api.Services
         ?? throw new KeyNotFoundException("Invoice not found");
 
       _mapper.Map(updateDto, existingInvoice);
-      existingInvoice.UpdatedAt = DateTime.UtcNow;
 
       await _invoiceRepository.UpdateInvoiceAsync(existingInvoice, tenantId);
       return _mapper.Map<InvoiceResponseDto>(existingInvoice);

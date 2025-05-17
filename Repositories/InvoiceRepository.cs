@@ -28,6 +28,8 @@ namespace ubuntu_health_api.Repositories
 
     public async Task AddInvoiceAsync(Invoice invoice)
     {
+      invoice.CreatedAt = DateTime.UtcNow;
+      invoice.UpdatedAt = DateTime.UtcNow;
       await _dbContext.Invoices.AddAsync(invoice);
       await _dbContext.SaveChangesAsync();
     }

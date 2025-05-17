@@ -32,6 +32,7 @@ namespace ubuntu_health_api.Helpers
       // Model -> Response DTO
       CreateMap<Patient, PatientDto>().ReverseMap();
       CreateMap<Patient, PatientResponseDto>();
+      CreateMap<PatientDto, PatientResponseDto>();
     }
   }
 }

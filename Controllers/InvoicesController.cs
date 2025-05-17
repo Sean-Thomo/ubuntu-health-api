@@ -2,7 +2,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ubuntu_health_api.Helpers;
-using ubuntu_health_api.Models;
 using ubuntu_health_api.Models.DTO;
 using ubuntu_health_api.Services;
 
