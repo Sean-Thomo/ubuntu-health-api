@@ -13,7 +13,7 @@ namespace ubuntu_health_api.Models
     public List<PrescriptionMedication> Medications { get; set; } = [];
     public string? Instructions { get; set; }
     public Patient? Patient { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
   }
 }

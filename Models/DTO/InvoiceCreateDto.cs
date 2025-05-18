@@ -4,8 +4,12 @@ namespace ubuntu_health_api.Models.DTO
   {
     public int PatientId { get; set; }
     public int AppointmentId { get; set; }
+    public required string PatientFirstName { get; set; }
+    public required string PatientLastName { get; set; }
     public decimal TotalAmount { get; set; }
     public string? Status { get; set; }
     public string? Notes { get; set; }
+    public required string DueDate { get; set; }
+
   }
 }

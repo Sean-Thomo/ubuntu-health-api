@@ -9,8 +9,9 @@ namespace ubuntu_health_api.Models
     public decimal TotalAmount { get; set; }
     public string? Status { get; set; }
     public string? Notes { get; set; }
+    public required string DueDate { get; set; }
     public Patient? Patient { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
   }
 }

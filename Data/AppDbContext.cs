@@ -30,6 +30,7 @@ namespace ubuntu_health_api.Data
         entity.HasIndex(a => new { a.TenantId });
         entity.HasOne(a => a.Patient)
               .WithMany(p => p.Appointments)
+              .HasForeignKey(a => a.PatientId)
               .OnDelete(DeleteBehavior.Cascade);
       });
 
