@@ -7,11 +7,21 @@ using ubuntu_health_api.Repositories;
 using ubuntu_health_api.Services;
 using ubuntu_health_api.Data;
 using ubuntu_health_api.Models;
+using Microsoft.OpenApi.Models;
 using ubuntu_health_api.Helpers;
+using DotNetEnv;
 
 DotNetEnv.Env.Load();
 
+Console.WriteLine($"DEBUG (DotNetEnv): JWT_SECRET from Environment.GetEnvironmentVariable: '{Environment.GetEnvironmentVariable("JWT_SECRET")}'");
+Console.WriteLine($"DEBUG (DotNetEnv): JWT_VALIDISSUER from Environment.GetEnvironmentVariable: '{Environment.GetEnvironmentVariable("JWT_VALIDISSUER")}'");
+Console.WriteLine($"DEBUG (DotNetEnv): JWT_VALIDAUDIENCE from Environment.GetEnvironmentVariable: '{Environment.GetEnvironmentVariable("JWT_VALIDAUDIENCE")}'");
+
 var builder = WebApplication.CreateBuilder(args);
+
+Console.WriteLine($"DEBUG (Configuration): JWT:Secret from builder.Configuration: '{builder.Configuration["JWT:Secret"]}'");
+Console.WriteLine($"DEBUG (Configuration): JWT:ValidIssuer from builder.Configuration: '{builder.Configuration["JWT:ValidIssuer"]}'");
+Console.WriteLine($"DEBUG (Configuration): JWT:ValidAudience from builder.Configuration: '{builder.Configuration["JWT:ValidAudience"]}'");
 var jwtSecret = builder.Configuration["JWT:Secret"];
 var issuer = builder.Configuration["JWT:ValidIssuer"];
 
@@ -47,8 +57,16 @@ builder.Services.AddAuthentication(options =>
   };
 });
 builder.Services.AddAuthorization();
-
-builder.Services.AddOpenApi();
+// Add Swagger/OpenAPI services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+  options.SwaggerDoc("v1", new OpenApiInfo
+  {
+    Title = "Ubuntu Health API",
+    Version = "v1"
+  });
+});
 builder.Services.AddCors(options =>
 {
   options.AddPolicy("AllowAllOrigins",
@@ -94,6 +112,10 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+// Enable Swagger middleware
+app.UseSwagger();
+// Enable Swagger UI middleware
+app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Ubuntu Health API v1"));
 app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
