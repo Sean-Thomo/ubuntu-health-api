@@ -19,14 +19,26 @@ namespace ubuntu_health_api.Controllers
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<AppointmentResponseDto>>> GetAllAppointments()
+    public async Task<ActionResult<IEnumerable<AppointmentResponseDto>>> GetAllAppointments(
+      int page = 1,
+      int pageSize = 10,
+    )
     {
       if (_httpContextAccessor.HttpContext == null) return Forbid();
       var tenantId = TenantHelper.GetTenantId(_httpContextAccessor.HttpContext);
       if (tenantId == null) return Forbid();
 
-      var appointments = await _appointmentService.GetAllAppointmentsAsync(tenantId);
-      return Ok(_mapper.Map<IEnumerable<AppointmentResponseDto>>(appointments));
+      var results = await _appointmentService.GetPaginatedAppointmentsAsync(tenantId, page, pageSize);
+
+      var mapped = _mapper.Map<IEnumerable<AppointmentResponseDto>>(results.Items);
+
+      return Ok(new PagedResult<AppointmentResponseDto>
+      {
+        Items = mapped,
+        TotalCount = results.TotalCount,
+        Page = results.Page,
+        PageSize = results.PageSize
+      });
     }
 
     [Authorize(Roles = "admin,doctor,nurse,receptionist")]

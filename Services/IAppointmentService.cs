@@ -5,6 +5,7 @@ namespace ubuntu_health_api.Services
 {
   public interface IAppointmentService
   {
+    Task<PagedResult<AppointmentResponseDto>> GetPaginatedAppointmentsAsync(string tenantId, int page, int pageSize);
     Task<IEnumerable<AppointmentResponseDto>> GetAllAppointmentsAsync(string tenantId);
     Task<AppointmentResponseDto> GetAppointmentByIdAsync(int id, string tenantId);
     Task<AppointmentResponseDto> AddAppointmentAsync(AppointmentCreateDto appointment, string tenantId);
