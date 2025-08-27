@@ -10,23 +10,16 @@ namespace ubuntu_health_api.Services
     private readonly IAppointmentRepository _appointmentRepository = appointmentRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<PagedResult<Appoinment>> GetPaginatedAppointmentsAsync(int tenantId, int page, int pageSize)
+    public async Task<PagedResult<AppointmentResponseDto>> GetPaginatedAppointmentsAsync(string tenantId, int page, int pageSize)
     {
-      var query = _context.Appoinments.Where(a => a.TenantId == tenantId);
+      var pagedAppointments = await _appointmentRepository.GetPaginatedAppointmentsAsync(tenantId, page, pageSize);
 
-      var totalCount = await query.CountAsync();
-
-      var items = await query
-          .Skip((page - 1) * pageSize)
-          .Take(pageSize)
-          .ToListAsync();
-
-      return new PagedResult<Appointment>
+      return new PagedResult<AppointmentResponseDto>
       {
-        Items = items,
-        TotalCount = totalCount,
-        Page = page,
-        PageSize = pageSize
+        Items = _mapper.Map<IEnumerable<AppointmentResponseDto>>(pagedAppointments.Items),
+        TotalCount = pagedAppointments.TotalCount,
+        Page = pagedAppointments.Page,
+        PageSize = pagedAppointments.PageSize
       };
     }
 

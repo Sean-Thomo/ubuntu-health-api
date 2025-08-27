@@ -8,6 +8,28 @@ namespace ubuntu_health_api.Repositories
   {
     private readonly AppDbContext _dbContext = context;
 
+    public async Task<PagedResult<Appointment>> GetPaginatedAppointmentsAsync(string tenantId, int page, int pageSize)
+    {
+      var query = _dbContext.Appointments
+        .Where(a => a.TenantId == tenantId)
+        .OrderBy(a => a.Id);
+
+      var totalCount = await query.CountAsync();
+
+      var items = await query
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+
+      return new PagedResult<Appointment>
+      {
+        Items = items,
+        TotalCount = totalCount,
+        Page = page,
+        PageSize = pageSize
+      };
+    }
+
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync(string tenantId)
     {
       return await _dbContext.Appointments
