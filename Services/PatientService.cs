@@ -10,9 +10,11 @@ namespace ubuntu_health_api.Services
     private readonly IPatientRepository _patientRepository = patientRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<IEnumerable<PatientResponseDto>> GetAllPatientsAsync(string tenantId)
+    public async Task<IEnumerable<PatientResponseDto>> GetAllPatientsAsync(string tenantId, CancellationToken cancellationToken = default)
     {
-      var patients = await _patientRepository.GetAllPatientsAsync(tenantId);
+      cancellationToken.ThrowIfCancellationRequested();
+
+      var patients = await _patientRepository.GetAllPatientsAsync(tenantId, cancellationToken);
       if (patients == null || !patients.Any())
       {
         throw new KeyNotFoundException("No patients found.");

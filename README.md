@@ -1,147 +1,204 @@
 # Ubuntu Health API
 
-## Overview
+A comprehensive multi-tenant healthcare management API built with ASP.NET Core, featuring patient management, appointment scheduling, clinical notes, prescriptions, and invoicing.
 
-The Ubuntu Health API is a modern healthcare management system designed to address inefficiencies in traditional healthcare systems, particularly in South Africa. Many healthcare providers still rely on outdated systems, including pen-and-paper record-keeping, which leads to inefficiencies, errors, and delays in patient care. This API provides a robust, scalable, and secure solution to digitize healthcare operations, enabling better patient management, appointment scheduling, billing, and more.
+## 🚀 Features
 
-## Problem Statement
+### Core Functionality
+- **Multi-tenant Architecture**: Isolated data per organization
+- **Role-based Access Control**: Admin, Doctor, Nurse, Receptionist roles
+- **Patient Management**: Complete patient records with medical history
+- **Appointment Scheduling**: Flexible appointment management system
+- **Clinical Notes**: Digital clinical documentation
+- **Prescription Management**: Medication tracking and management
+- **Invoice Generation**: Automated billing and payment tracking
 
-Healthcare providers in South Africa often face challenges due to:
+### Technical Features
+- **Input Validation**: Comprehensive data validation with custom error messages
+- **Global Exception Handling**: Centralized error management with custom exceptions
+- **Structured Logging**: Detailed logging throughout the application
+- **Security Headers**: Enhanced security with proper HTTP headers
+- **Async/Await Patterns**: Proper async programming with cancellation tokens
 
-- **Manual Record-Keeping**: Paper-based systems are prone to errors, loss, and inefficiencies.
-- **Fragmented Systems**: Lack of integration between patient records, billing, and appointment scheduling.
-- **Limited Accessibility**: Difficulty in accessing patient data across multiple locations.
-- **Role-Based Restrictions**: Inefficient management of staff roles and permissions.
+## 🛠️ Technology Stack
 
-The Ubuntu Health API aims to solve these problems by providing a centralized, digital platform for managing healthcare operations.
+- **.NET 8.0**
+- **ASP.NET Core Web API**
+- **Entity Framework Core** (SQL Server)
+- **AutoMapper** (Object mapping)
+- **JWT Authentication**
+- **xUnit** (Unit testing)
+- **Moq** (Mocking framework)
+- **Serilog** (Structured logging)
 
-## Features
+## 📋 Prerequisites
 
-### 1. User Authentication & Role Management
+- .NET 8.0 SDK
+- SQL Server (LocalDB or full instance)
+- Visual Studio 2022 or VS Code
+- Git
 
-- Secure user authentication using JWT (JSON Web Tokens).
-- Role-based access control for Admin, Doctor, Nurse, and Receptionist roles.
-- Tenant-based isolation to ensure data privacy for multi-tenant environments.
+## 🚀 Getting Started
 
-### 2. Patient Management
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/ubuntu-health-api.git
+cd ubuntu-health-api
+```
 
-- CRUD operations for managing patient records.
-- Tenant-specific patient data to ensure data isolation.
-- Support for storing detailed patient information, including medical history, allergies, and emergency contacts.
+### 2. Database Setup
+```bash
+# Update connection string in appsettings.json
+# Run migrations
+dotnet ef database update
+```
 
-### 3. Appointment Scheduling
+### 3. Install Dependencies
+```bash
+dotnet restore
+```
 
-- Manage appointments for patients with support for different appointment types.
-- Role-based access to appointment data.
-- Conflict detection to prevent double-booking.
+### 4. Run the Application
+```bash
+dotnet run
+```
 
-### 4. Prescription Handling
+The API will be available at `https://localhost:7000` (HTTPS) or `http://localhost:5000` (HTTP).
 
-- Manage prescriptions for patients, including medications, dosages, and refill information.
-- Role-based access for doctors to create and update prescriptions.
+## 📚 API Documentation
 
-### 5. Billing
+### Authentication Endpoints
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - User login
+- `POST /api/auth/assign-role` - Assign role to user (Admin only)
+- `GET /api/auth/user-roles` - Get user roles (Admin only)
 
-- Generate and manage invoices for patient appointments and treatments.
-- Track payment statuses and add notes for billing records.
+### Patient Management
+- `GET /api/patients` - Get all patients
+- `GET /api/patients/{id}` - Get patient by ID
+- `POST /api/patients` - Create new patient
+- `PUT /api/patients/{id}` - Update patient
+- `DELETE /api/patients/{id}` - Delete patient
 
-### 6. Clinical Notes
+### Appointment Management
+- `GET /api/appointments` - Get all appointments (paginated)
+- `GET /api/appointments/{id}` - Get appointment by ID
+- `POST /api/appointments` - Create new appointment
+- `PUT /api/appointments/{id}` - Update appointment
+- `DELETE /api/appointments/{id}` - Delete appointment
 
-- Allow doctors to add and manage clinical notes for patients.
-- Secure storage of sensitive medical information.
+### Clinical Notes
+- `GET /api/clinicalnotes` - Get all clinical notes
+- `GET /api/clinicalnotes/{id}` - Get clinical note by ID
+- `POST /api/clinicalnotes` - Create new clinical note
+- `PUT /api/clinicalnotes/{id}` - Update clinical note
+- `DELETE /api/clinicalnotes/{id}` - Delete clinical note
 
-## Architecture
+### Prescriptions
+- `GET /api/prescriptions` - Get all prescriptions
+- `GET /api/prescriptions/{id}` - Get prescription by ID
+- `POST /api/prescriptions` - Create new prescription
+- `PUT /api/prescriptions/{id}` - Update prescription
+- `DELETE /api/prescriptions/{id}` - Delete prescription
 
-The Ubuntu Health API follows a modular, service-oriented architecture to ensure scalability, maintainability, and testability.
+### Invoices
+- `GET /api/invoices` - Get all invoices
+- `GET /api/invoices/{id}` - Get invoice by ID
+- `POST /api/invoices` - Create new invoice
+- `PUT /api/invoices/{id}` - Update invoice
+- `DELETE /api/invoices/{id}` - Delete invoice
 
-### 1. Layers
+## 🔧 Configuration
 
-- **Controllers**: Handle HTTP requests and responses. Delegate business logic to services.
-- **Services**: Contain business logic and interact with repositories.
-- **Repositories**: Handle database interactions using Entity Framework Core.
-- **Models**: Define the structure of data entities and DTOs (Data Transfer Objects).
-- **Helpers**: Provide utility functions, such as tenant validation.
+### Environment Variables
+```bash
+# Database
+ConnectionStrings__DefaultConnection="Server=(localdb)\\mssqllocaldb;Database=UbuntuHealthDb;Trusted_Connection=true;"
 
-### 2. Multi-Tenant Design
+# JWT Settings
+JWT__Secret="your-super-secret-key-here"
+JWT__ValidIssuer="UbuntuHealthAPI"
+JWT__ValidAudience="UbuntuHealthUsers"
 
-- Tenant-based isolation ensures that each healthcare provider's data is securely separated.
-- Tenant IDs are included in all major entities (e.g., Patient, Invoice, Appointment) to enforce data isolation.
+# Logging
+Serilog__MinimumLevel="Information"
+```
 
-### 3. Security
+### appsettings.json
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=UbuntuHealthDb;Trusted_Connection=true;"
+  },
+  "JWT": {
+    "Secret": "your-super-secret-key-here",
+    "ValidIssuer": "UbuntuHealthAPI",
+    "ValidAudience": "UbuntuHealthUsers"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+```
 
-- **Authentication**: Secure login using JWT.
-- **Authorization**: Role-based access control using ASP.NET Core's built-in authorization.
-- **Data Validation**: Input validation to prevent SQL injection and other vulnerabilities.
+### Security
+- JWT token authentication
+- Role-based authorization
+- Input validation and sanitization
+- Security headers middleware
+- HTTPS enforcement
 
-## Tech Stack
+## 🏗️ Architecture
 
-### Frontend:
+### Project Structure
+```
+├── Controllers/          # API Controllers
+├── Services/            # Business Logic Layer
+├── Repositories/        # Data Access Layer
+├── Models/              # Data Models and DTOs
+├── Middleware/          # Custom Middleware
+├── Exceptions/          # Custom Exceptions
+├── Helpers/             # Utility Classes
+├── Tests/               # Unit Tests
+└── Data/                # Database Context
+```
 
-- _Frontend services powered by [Ubuntu Health](https://github.com/Sean-Thomo/ubuntu-health)_
+### Design Patterns
+- **Repository Pattern**: Data access abstraction
+- **Service Layer Pattern**: Business logic separation
+- **Dependency Injection**: Loose coupling
+- **CQRS**: Command Query Responsibility Segregation
+- **Middleware Pattern**: Cross-cutting concerns
 
-### Backend
+## 🔒 Security Considerations
 
-- **ASP.NET Core 7.0**: Framework for building the API.
-- **Entity Framework Core**: ORM for database interactions.
-- **SQLite**: Lightweight database for development and testing (can be replaced with PostgreSQL or SQL Server for production).
+- All endpoints require authentication (except registration/login)
+- Tenant isolation prevents cross-tenant data access
+- Input validation prevents malicious data
+- Rate limiting prevents API abuse
+- Security headers protect against common attacks
+- JWT tokens with expiration for secure authentication
 
-### Authentication & Authorization
+## 🚀 Deployment
 
-- **ASP.NET Identity**: User management and authentication.
-- **JWT (JSON Web Tokens)**: Secure token-based authentication.
+### Docker
+```bash
+# Build image
+docker build -t ubuntu-health-api .
 
-### Other Tools
+# Run container
+docker run -p 5000:80 ubuntu-health-api
+```
 
-- **DotNetEnv**: Load environment variables for configuration.
-- **Migrations**: Database schema management using EF Core migrations.
 
-## How It Works
+## 🤝 Contributing
 
-### User Authentication:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-- Users register with their tenant ID and role (e.g., Admin, Doctor).
-- JWT tokens are issued upon successful login, containing claims for roles and tenant IDs.
-
-### Role-Based Access Control:
-
-- Admins can manage users, roles, and tenants.
-- Doctors can manage patients, appointments, prescriptions, and clinical notes.
-- Receptionists can manage appointments and billing.
-
-### Tenant Isolation:
-
-- All data is scoped to a specific tenant using the `TenantId` field.
-- Tenant validation ensures that users can only access data belonging to their tenant.
-
-### Healthcare Operations:
-
-- **Patients**: Add, update, delete, and retrieve patient records.
-- **Appointments**: Schedule, update, and cancel appointments.
-- **Prescriptions**: Manage medications and dosages for patients.
-- **Billing**: Generate invoices and track payment statuses.
-
-## Setup Instructions
-
-### 1. Prerequisites
-
-- .NET 7 SDK
-- SQLite (or another database for production)
-- Postman (optional, for testing API endpoints)
-
-### 2. Clone the Repository
-
-### 3. Configure Environment Variables
-
-Create a `.env` file in the root directory with the following variables:
-
-### 4. Run Migrations
-
-### 5. Start the Application
-
-### 6. Access the API
-
-- **Swagger UI**: http://localhost:5000/swagger
-- **Example Endpoints**:
-  - `POST /api/auth/register`: Register a new user.
-  - `POST /api/auth/login`: Login and receive a JWT token.
-  - `GET /api/patients`: Retrieve all patients for the tenant.
+**Built with ❤️ for healthcare professionals**
